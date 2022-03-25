@@ -1,112 +1,81 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { StyleSheet, Text } from "react-native";
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
+import Home from "./src/screensNavBar/Home";
+import Categories from "./src/screensNavBar/Categories";
+import Notifications from "./src/screensNavBar/Notifications";
+import Carts from "./src/screensNavBar/Carts";
+import User from "./src/screensNavBar/User";
+
+import Category from "./src/screens/Category";
+import Product from './src/screens/Product';
+
+import Icon from 'react-native-vector-icons/Ionicons';
+
+const Stack = createNativeStackNavigator()
+export default function App() {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <NavigationContainer style={styles.container}>
+      <Text style={styles.header}></Text>
+
+      <Stack.Navigator screenOptions={{headerShown:false}}>      
+        <Stack.Screen
+          name="TabMe"
+          component={TabMe}
+        />
+        <Stack.Screen name="Category" component={Category} />
+        <Stack.Screen name="Product" component={Product} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
+}
+
+const Tab = createBottomTabNavigator()
+function TabMe() {
+  return (
+    <Tab.Navigator
+      initialRouteName="Home"
+      barStyle={{ backgroundColor: 'ghostwhite' }}
+      
+      screenOptions={ ({ route }) => ({
+        tabBarIcon: ({ focused, color="orange", size=24 }) => {
+          let iconName
+          if (route.name === 'Home') {
+            iconName = focused ? 'home': 'home-outline'
+          } else if (route.name === 'Category') {
+            iconName = focused ? 'list': 'list-outline'
+          } else if (route.name === 'Notification') {
+            iconName = focused ? 'notifications': 'notifications-outline'
+          } else if (route.name === 'Cart') {
+            iconName = focused ? 'cart': 'cart-outline'
+          } else if (route.name === 'User') {
+            iconName = focused ? 'settings': 'settings-outline'
+          }
+
+          return <Icon name={iconName} size={size} color={color} />
+        },
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+        headerShown: false,
+      })}
+    >
+      <Tab.Screen name='Home' component={Home} />
+      <Tab.Screen name='Category' component={Categories}/>
+      <Tab.Screen name='Notification' component={Notifications}
+        options={{ tabBarBadge: 0 }}
+      />
+      <Tab.Screen name='Cart' component={Carts}
+        options={{ tabBarBadge: 0 }}
+      />
+      <Tab.Screen name='User' component={User}/>
+    </Tab.Navigator>
+  )
 };
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
 });
-
-export default App;
