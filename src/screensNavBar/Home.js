@@ -1,5 +1,5 @@
 import React from "react"
-import { View, StyleSheet, TextInput, Keyboard, Button } from "react-native"
+import { View, StyleSheet, TextInput, Keyboard, Button, Image } from "react-native"
 import Products from "../components/Products"
 import { Picker } from '@react-native-picker/picker'
 import { useState, useEffect } from "react"
@@ -9,19 +9,19 @@ const Home = () => {
   const [searchText, setSearchText] = useState("")
 
   const [products, setProducts] = useState([
-    { product_id: 1, product_name: "Laptop1", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 1, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock: 8},
-    { product_id: 2, product_name: "Laptop2", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 1, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock: 8},
-    { product_id: 3, product_name: "Laptop3", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 2, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock: 8},
-    { product_id: 4, product_name: "Laptop4", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 2, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock: 8},
-    { product_id: 5, product_name: "Laptop5", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 3, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock: 8},
-    { product_id: 6, product_name: "Laptop6", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 3, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock: 8},
-    { product_id: 7, product_name: "Laptop7", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 4, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock: 8},
-    { product_id: 8, product_name: "Laptop8", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 4, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock: 8},
-    { product_id: 9, product_name: "Laptop9", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 5, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock: 8},
-    { product_id: 10, product_name: "Laptop10", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "DELL", category_id: 5, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock: 8},
-    { product_id: 11, product_name: "Laptop11", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "DELL", category_id: 6, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock: 8},
-    { product_id: 12, product_name: "Laptop12", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "DELL", category_id: 6, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock: 8},
-    { product_id: 13, product_name: "Laptop13", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "DELL", category_id: 6, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock: 8},
+    { product_id: 1, product_name: "Laptop1", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 1, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock_total: 8},
+    { product_id: 2, product_name: "Laptop2", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 1, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock_total: 8},
+    { product_id: 3, product_name: "Laptop3", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 2, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock_total: 8},
+    { product_id: 4, product_name: "Laptop4", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 2, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock_total: 8},
+    { product_id: 5, product_name: "Laptop5", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 3, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock_total: 8},
+    { product_id: 6, product_name: "Laptop6", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 3, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock_total: 8},
+    { product_id: 7, product_name: "Laptop7", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 4, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock_total: 8},
+    { product_id: 8, product_name: "Laptop8", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 4, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock_total: 8},
+    { product_id: 9, product_name: "Laptop9", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "APPLE", category_id: 5, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock_total: 8},
+    { product_id: 10, product_name: "Laptop10", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "DELL", category_id: 5, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock_total: 8},
+    { product_id: 11, product_name: "Laptop11", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "DELL", category_id: 6, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock_total: 8},
+    { product_id: 12, product_name: "Laptop12", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "DELL", category_id: 6, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock_total: 8},
+    { product_id: 13, product_name: "Laptop13", product_images: "https://i.imgur.com/qOLBSDX.png", product_brand: "DELL", category_id: 6, product_price: 9, product_price_discounted: 6, product_description: "", product_rating: 5, product_stock_total: 8},
   ]);
 
   const [brands, setBrands] = useState([
@@ -35,6 +35,7 @@ const Home = () => {
     setSearchText(text)
   }
 
+  const linkImg = `https://i.imgur.com/zJ1hfKz.png`
   const size = 24
   return (
     <View style={styles.container}>
@@ -66,6 +67,8 @@ const Home = () => {
         </Picker>
       </View>
 
+      <Image style={styles.banner} source={{uri: linkImg}} />
+
       <Products
         products={products.filter((item) =>
           selectedValue === 0
@@ -79,6 +82,10 @@ const Home = () => {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    height: '100%',
+  },
   text: {
     color: "black"
   },
@@ -108,6 +115,12 @@ const styles = StyleSheet.create({
   },
   icon: {
     paddingLeft: 10
+  },
+  banner: {
+    width: "98%",
+    height: 200,
+    margin: 10,
+    marginTop: 20,
   }
 })
 
