@@ -8,11 +8,22 @@ const ProductsItem = (props) => {
       onPress={props.onPress}
     >
       <View style={styles.container} flexDirection="column">
-        <Image style={styles.img}
-          source={{uri: linkImg}}
-        />
+        <Image style={styles.img} source={{uri: linkImg}} />
         <Text style={[styles.text, styles.name]}>{props.product.product_name}</Text>
-        <Text style={[styles.text, styles.price]}>{props.product.product_price} $</Text>
+
+        <View style={styles.containerOneLine}>
+          <Text style={[styles.text, styles.price]}>{props.product.product_price} $</Text>
+          <View style={styles.rightContainerOneLine}>
+            <Text style={[styles.text, styles.stock]}>{props.product.product_stock_total} pcs</Text>
+          </View>
+        </View>
+        
+        <View style={styles.containerOneLine}>
+          <Text style={[styles.text, styles.discounted]}>{props.product.product_price_discounted} $</Text>
+          <View style={styles.rightContainerOneLine}>
+            {/* rating */}
+          </View>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -41,6 +52,24 @@ const styles = StyleSheet.create({
   price: {
     padding: 4,
     paddingLeft: 10,
+    color: "gray",
+    textDecorationLine: 'line-through',
+  },
+  discounted: {
+    padding: 4,
+    paddingLeft: 10,
     color: "red",
+    fontWeight: "500",
+  },
+  containerOneLine: {
+    flexDirection: "row",
+    textAlign: "center",
+  },
+  rightContainerOneLine: {
+    flex: 1,
+    justifyContent: "flex-end",
+    paddingRight: 8,
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
