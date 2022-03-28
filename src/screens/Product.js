@@ -6,16 +6,23 @@ const Product = (props) => {
   let product = props.route.params.product
   // from product_id >>> query list product_detail
   const [productTypes, setProductTypes] = useState([
-    { product_detail_id: 1, product_color: "blue", product_price: 11, product_price_discounted: 1, product_stock: 100, product_id: 1, product_images: "https://i.imgur.com/qOLBSDX.png"},
-    { product_detail_id: 1, product_color: "red", product_price: 22, product_price_discounted: 2, product_stock: 200, product_id: 1, product_images: "https://i.imgur.com/qOLBSDX.png"}
+    { product_detail_id: 1, product_color: "blue", product_price: 11, product_price_discounted: 1, product_stock: 100, product_id: 1, product_images: "https://i.imgur.com/s960jiH.png"},
+    { product_detail_id: 1, product_color: "red", product_price: 22, product_price_discounted: 2, product_stock: 200, product_id: 1, product_images: "https://i.imgur.com/cSZ2XJw.jpg"}
   ])
 
-  const [displayStock, setdisplayStock] = useState([0])
-  function onPressTypeColor(stock) {
-    setdisplayStock(stock)
+  const [displayStock, setDisplayStock] = useState([0])
+  const [displayPrice, setDisplayPrice] = useState([product.display_price])
+  const [displayPriceDiscounted, setDisplayPriceDiscounted] = useState([product.display_price_discounted])
+  const [displayImage, setDisplayImage] = useState([product.display_image])
+
+  function onPressTypeColor(item) {
+    setDisplayStock(item.product_stock)
+    setDisplayPrice(item.product_price)
+    setDisplayPriceDiscounted(item.product_price_discounted)
+    setDisplayImage(item.product_images)
   }
 
-  const linkImg = `${product.product_images}`
+  const linkImg = `${displayImage}`
 
   return (
     <View style={styles.container} flexDirection="column">
@@ -24,8 +31,8 @@ const Product = (props) => {
       <Text style={[styles.text, styles.brand]}>{product.product_brand}</Text>
 
       <View style={styles.containerOneLine}>
-        <Text style={[styles.text, styles.discounted]}>{product.product_price_discounted} $</Text>
-        <Text style={[styles.text, styles.price]}>{product.product_price} $</Text>
+        <Text style={[styles.text, styles.discounted]}>{displayPriceDiscounted} $</Text>
+        <Text style={[styles.text, styles.price]}>{displayPrice} $</Text>
         <View style={styles.rightContainerOneLine}>
           {/* rating or brand*/}
         </View>
@@ -39,7 +46,7 @@ const Product = (props) => {
           renderItem={({ item }) =>
             <TouchableOpacity activeOpacity={0.5}
             // --------------------------------------------------------------
-              onPress={() => onPressTypeColor(item.product_stock)}
+              onPress={() => onPressTypeColor(item)}
             >
               <View style={styles.wrap}>
                 <Text style={[styles.text, styles.type]}>{item.product_color}</Text>
