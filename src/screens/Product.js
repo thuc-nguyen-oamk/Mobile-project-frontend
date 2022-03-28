@@ -4,16 +4,16 @@ import { useState, useEffect } from "react";
 
 const Product = (props) => {
   let product = props.route.params.product
-  // from product_id >>> query list product_detail
+
   const [productTypes, setProductTypes] = useState([
     { product_detail_id: 1, product_color: "blue", product_price: 11, product_price_discounted: 1, product_stock: 100, product_id: 1, product_images: "https://i.imgur.com/s960jiH.png"},
-    { product_detail_id: 1, product_color: "red", product_price: 22, product_price_discounted: 2, product_stock: 200, product_id: 1, product_images: "https://i.imgur.com/cSZ2XJw.jpg"}
+    { product_detail_id: 2, product_color: "red", product_price: 22, product_price_discounted: 2, product_stock: 200, product_id: 1, product_images: "https://i.imgur.com/cSZ2XJw.jpg"}
   ])
 
-  const [displayStock, setDisplayStock] = useState([0])
-  const [displayPrice, setDisplayPrice] = useState([product.display_price])
-  const [displayPriceDiscounted, setDisplayPriceDiscounted] = useState([product.display_price_discounted])
-  const [displayImage, setDisplayImage] = useState([product.display_image])
+  const [displayStock, setDisplayStock] = useState([productTypes[0].product_stock])
+  const [displayPrice, setDisplayPrice] = useState([productTypes[0].product_price])
+  const [displayPriceDiscounted, setDisplayPriceDiscounted] = useState([productTypes[0].product_price_discounted])
+  const [displayImage, setDisplayImage] = useState([productTypes[0].product_images])
 
   function onPressTypeColor(item) {
     setDisplayStock(item.product_stock)
@@ -30,14 +30,6 @@ const Product = (props) => {
       <Text style={[styles.text, styles.name]}>{product.product_name}</Text>
       <Text style={[styles.text, styles.brand]}>{product.product_brand}</Text>
 
-      <View style={styles.containerOneLine}>
-        <Text style={[styles.text, styles.discounted]}>{displayPriceDiscounted} $</Text>
-        <Text style={[styles.text, styles.price]}>{displayPrice} $</Text>
-        <View style={styles.rightContainerOneLine}>
-          {/* rating or brand*/}
-        </View>
-      </View>
-
       <Text style={styles.chooseColor}>Choose color</Text>
       <View style={styles.listTypes}>
         <FlatList
@@ -45,7 +37,6 @@ const Product = (props) => {
           numColumns={5}
           renderItem={({ item }) =>
             <TouchableOpacity activeOpacity={0.5}
-            // --------------------------------------------------------------
               onPress={() => onPressTypeColor(item)}
             >
               <View style={styles.wrap}>
@@ -60,6 +51,14 @@ const Product = (props) => {
         </Text>
       </View>
       
+      <View style={styles.containerOneLine}>
+        <Text style={[styles.text, styles.discounted]}>{displayPriceDiscounted} $</Text>
+        <Text style={[styles.text, styles.price]}>{displayPrice} $</Text>
+        <View style={styles.rightContainerOneLine}>
+          {/* rating or brand*/}
+        </View>
+      </View>
+
       <Text style={[styles.text, styles.name]}>Description</Text>
       <Text style={[styles.text, styles.description]}>{product.product_description}</Text>
     </View>
@@ -110,7 +109,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   listTypes: {
-    paddingBottom: 20
+    paddingBottom: 8
   },
   wrap: {
     paddingRight: 16
