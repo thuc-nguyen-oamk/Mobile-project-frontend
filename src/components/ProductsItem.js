@@ -2,7 +2,7 @@ import React from "react"
 import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
 
 const ProductsItem = (props) => {
-  const linkImg = `${props.product.product_images}`
+  const linkImg = `${props.product.display_image}`
   return (
     <TouchableOpacity activeOpacity={0.5}
       onPress={props.onPress}
@@ -12,14 +12,14 @@ const ProductsItem = (props) => {
         <Text style={[styles.text, styles.name]}>{props.product.product_name}</Text>
 
         <View style={styles.containerOneLine}>
-          <Text style={[styles.text, styles.price]}>{props.product.product_price} $</Text>
+          <Text style={[styles.text, styles.price]}>{props.product.display_price} $</Text>
           <View style={styles.rightContainerOneLine}>
             <Text style={[styles.text, styles.stock]}>{props.product.product_stock_total} pcs</Text>
           </View>
         </View>
         
         <View style={styles.containerOneLine}>
-          <Text style={[styles.text, styles.discounted]}>{props.product.product_price_discounted} $</Text>
+          <Text style={[styles.text, styles.discounted]}>{props.product.display_price_discounted} $</Text>
           <View style={styles.rightContainerOneLine}>
             {/* rating */}
           </View>
