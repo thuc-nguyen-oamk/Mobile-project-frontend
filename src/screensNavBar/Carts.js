@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Button } from 'react-native';
 import React from 'react';
 import { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,34 +22,73 @@ const Carts = () => {
     readStorage()
   }, [cart])
 
+  const deleteItem = async (id, detail_id) => {
+    try {
+      let currentIndex = cart.findIndex(function (p, i) {
+        return (p.product_id === id && p.product_detail_id === detail_id)
+      });
+      cart.splice(currentIndex, 1);
+      await AsyncStorage.setItem('cart', JSON.stringify(cart));
+      setCart([...cart]);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const downQty = async (id, detail_id) => {
+    try {
+      // let currentIndex = cart.findIndex((p, i) => {
+      //   p.product_id === id && p.product_detail_id === detail_id
+      // });
+      let currentIndex = cart.findIndex(function (p, i) {
+        return (p.product_id === id && p.product_detail_id === detail_id)
+      });
+      cart[currentIndex].product_qty -= 1;
+      await AsyncStorage.setItem('cart', JSON.stringify(cart));
+      setCart([...cart]);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const upQty = async (id, detail_id) => {
+    try {
+      let currentIndex = cart.findIndex(function (p, i) {
+        return (p.product_id === id && p.product_detail_id === detail_id)
+      });
+      cart[currentIndex].product_qty += 1;
+      await AsyncStorage.setItem('cart', JSON.stringify(cart));
+      setCart([...cart]);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // const getTotalPrice = () => {
+  //   if (cart.length === 0) return 0;
+  //   const totalObj = cart.reduce((prev, curr) => ({
+  //     price: curr.price * curr.qty + prev.price * prev.qty,
+  //     qty: 1,
+  //   }));
+  //   return totalObj.price;
+  // };
+
   return (
     <View>
       <FlatList
         data={cart}
         renderItem={({ item }) => 
           <View style={styles.wrap}>
-            <CartsItem card={item}>
-              <View style={styles.left}>
-                <Image style={styles.img} source={{uri: item.product_images}} />
-              </View>
-              <View style={styles.right}>
-                <Text style={[styles.text, styles.name]}>{item.product_name}</Text>
-                <View style={styles.row}>
-                  <View style={styles.rowLeft}>
-                    <Text style={[styles.text, styles.price]}>{item.product_price}$</Text>
-                    <Text style={[styles.text, styles.discounted]}>{item.product_price_discounted}$</Text>
-                  </View>
-                  <View style={styles.rowRight}>
-                    <Text style={[styles.text, styles.type]}>{item.product_color}</Text>
-                  </View>
-                </View>
-                <Text style={[styles.text, styles.qty]}>{item.product_qty}</Text>
-              </View>
-            </CartsItem>
+            <CartsItem item={item} 
+              deleteItem={() => deleteItem(item.product_id, item.product_detail_id)}
+              downQty={() => downQty(item.product_id, item.product_detail_id)}
+              upQty={() => upQty(item.product_id, item.product_detail_id)}
+            />
           </View>
         }
         keyExtractor={item => `${item.product_id} and ${item.product_detail_id}`}
       />
+      <Button title="Payment" color="#f48cff" />
     </View>
   )
 }
@@ -57,26 +96,5 @@ const Carts = () => {
 export default Carts
 
 const styles = StyleSheet.create({
-  text: {
-    color: 'black',
-  },
-  img: {
-    width: 100,
-    height: 100,    
-  },
-  right: {
-    flex: 1,
-    padding: 8
-  },
-  row: {
-    flexDirection: "row",
-  },
-  rowLeft: {
-    flexDirection: "row",
-  },
-  rowRight: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
+
 })
