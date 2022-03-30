@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     color: "red",
-    fontSize: 28,
+    fontSize: 32,
   },
   viewQty: {
     paddingLeft: 16,
