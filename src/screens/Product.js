@@ -7,7 +7,7 @@ const Product = (props) => {
   let product = props.route.params.product
 
   const [productTypes, setProductTypes] = useState([
-    { product_detail_id: 1, product_color: "blue", product_price: 11, product_price_discounted: 1, product_stock: 100, product_id: 1, product_images: "https://i.imgur.com/s960jiH.png"},
+    { product_detail_id: 1, product_color: "blue", product_price: 11, product_price_discounted: 1, product_stock: 0, product_id: 1, product_images: "https://i.imgur.com/s960jiH.png"},
     { product_detail_id: 2, product_color: "red", product_price: 22, product_price_discounted: 2, product_stock: 200, product_id: 1, product_images: "https://i.imgur.com/cSZ2XJw.jpg"}
   ])
 
@@ -28,46 +28,55 @@ const Product = (props) => {
   let linkImg = `${displayImage}`
 
   const addToCart = async () => {
-    try {
-      // await AsyncStorage.removeItem('cart')
-      const cartString = await AsyncStorage.getItem('cart')
-      let cart = JSON.parse(cartString)
-      if (!cart) {cart = []}
-      
-      // let currentProduct = cart.find(p => 
-        // (p.product_detail_id === choosenProduct.product_detail_id && p.product_id === choosenProduct.product_id))
-      let indexCurrentProduct = 0
-      let currentProduct = cart.find(function (p,i) { 
-        if (p.product_detail_id === choosenProduct.product_detail_id && p.product_id === choosenProduct.product_id) {
-          indexCurrentProduct = i
-          return i
+    if (choosenProduct.product_stock > 0) { 
+      try {
+        // await AsyncStorage.removeItem('cart')
+        const cartString = await AsyncStorage.getItem('cart')
+        let cart = JSON.parse(cartString)
+        if (!cart) {cart = []}
+        
+        // let indexCurrentProduct = 0
+        // let currentProduct = cart.find(function (p,i) { 
+        //   if (p.product_detail_id === choosenProduct.product_detail_id && p.product_id === choosenProduct.product_id) {
+        //     indexCurrentProduct = i
+        //     return i
+        //   }
+        // })
+
+        let indexCurrentProduct = cart.findIndex(function (p, i) {
+          return (p.product_detail_id === choosenProduct.product_detail_id && p.product_id === choosenProduct.product_id)
+        });
+
+        // if (!currentProduct) {
+        if (indexCurrentProduct === -1) {
+          // currentProduct = {
+          let currentProduct = {
+            product_detail_id: choosenProduct.product_detail_id,
+            product_id: choosenProduct.product_id,
+            product_name: product.product_name,
+            product_price: choosenProduct.product_price, 
+            product_price_discounted: choosenProduct.product_price_discounted,
+            product_color: choosenProduct.product_color, 
+            product_images: choosenProduct.product_images, 
+            product_qty: 1,
+          } 
+          // console.log(currentProduct)
+          cart.push(currentProduct)
+          await AsyncStorage.setItem('cart', JSON.stringify(cart))
         }
-      })
+        else {
+          cart[indexCurrentProduct].product_qty +=1
+          await AsyncStorage.setItem('cart', JSON.stringify(cart))
+        }
 
-      // error when choose first product again !!! 
-      if (!currentProduct) {
-        currentProduct = {
-          product_detail_id: choosenProduct.product_detail_id,
-          product_id: choosenProduct.product_id,
-          product_name: product.product_name,
-          product_price: choosenProduct.product_price, 
-          product_price_discounted: choosenProduct.product_price_discounted,
-          product_color: choosenProduct.product_color, 
-          product_images: choosenProduct.product_images, 
-          product_qty: 1,
-        } 
-        // console.log(currentProduct)
-        cart.push(currentProduct)
-        await AsyncStorage.setItem('cart', JSON.stringify(cart))
+        alert("Added to cart.")
+        setDisplayStock(displayStock-1)
+      } catch (e) {
+        console.error(e)
       }
-      else {
-        cart[indexCurrentProduct].product_qty +=1
-        await AsyncStorage.setItem('cart', JSON.stringify(cart))
-      }
-
-      alert("Added to cart.")
-    } catch (e) {
-      console.error(e)
+    }
+    else {
+      alert("Sorry: out of stock")
     }
   }
 
@@ -94,7 +103,8 @@ const Product = (props) => {
             keyExtractor={item => item}
           />  
           <Text style={[styles.text, styles.stock]}>
-            {displayStock==0 ? "" : displayStock+"pcs"}
+            {/* {displayStock==0 ? "" : displayStock+"pcs"} */}
+            {displayStock+"pcs"}
           </Text>
         </View>
         
