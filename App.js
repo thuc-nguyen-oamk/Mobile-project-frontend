@@ -13,11 +13,14 @@ import User from "./src/screensNavBar/User";
 
 import Category from "./src/screens/Category";
 import Product from './src/screens/Product';
+import SignUp from './src/screens/SignUp';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import axios from 'react-native-axios';
 
 const Stack = createNativeStackNavigator()
 export default function App() {
+  axios.defaults.baseUrl = "https://api.uniproject.xyz/eshopmb/"
   return (
     <NavigationContainer style={styles.container}>
       <Text style={styles.header}></Text>
@@ -29,6 +32,7 @@ export default function App() {
         />
         <Stack.Screen name="Category" component={Category} />
         <Stack.Screen name="Product" component={Product} />
+        <Stack.Screen name="SignUp" component={SignUp} />
       </Stack.Navigator>
     </NavigationContainer>
   );
