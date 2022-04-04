@@ -1,13 +1,16 @@
 import { View, StyleSheet, Text, Image } from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
+import axios from "react-native-axios";
 
 const CartsItem = (props) => {
+  const linkImg = `${axios.defaults.baseUrl}/images/${props.item.product_images}`
+
   return (
     <View style={styles.card}>
 
       <View style={styles.left}>
-        <Image style={styles.img} source={{uri: props.item.product_images}} />
+        <Image style={styles.img} source={{uri: linkImg}} />
       </View>
 
       <View style={styles.right}>

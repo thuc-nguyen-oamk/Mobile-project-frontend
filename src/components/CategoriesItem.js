@@ -1,8 +1,9 @@
 import React from "react"
 import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
+import axios from "react-native-axios";
 
 const CategoriesItem = (props) => {
-  const linkImg = `${props.category.category_image}`
+  const linkImg = `${axios.defaults.baseUrl}/images/${props.category.category_image}`
   return (
     <TouchableOpacity activeOpacity={0.5} onPress={props.onPress}>
       <View style={styles.container}>

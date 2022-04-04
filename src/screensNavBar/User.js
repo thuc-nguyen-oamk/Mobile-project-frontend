@@ -6,7 +6,6 @@ import LoginSignup from '../components/LoginSignup';
 import UserProfile from '../components/UserProfile';
 
 const User = () => {
-  console.log("hehehe")
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   
   useEffect(() => {
