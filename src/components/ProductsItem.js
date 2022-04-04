@@ -1,8 +1,9 @@
 import React from "react"
 import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
+import axios from "react-native-axios";
 
 const ProductsItem = (props) => {
-  const linkImg = `${props.product.display_image}`
+  const linkImg = `${axios.defaults.baseUrl}/images/${props.product.display_image}`
   return (
     <TouchableOpacity activeOpacity={0.5}
       onPress={props.onPress}

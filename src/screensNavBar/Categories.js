@@ -1,19 +1,26 @@
-import React from 'react'
+import React from 'react';
 import { StyleSheet, View, FlatList } from "react-native";
 import CategoriesItem from "../components/CategoriesItem";
-import { useState } from "react";
-import { useNavigation } from '@react-navigation/native'
+import { useState, useEffect } from "react";
+import { useNavigation } from '@react-navigation/native';
+import axios from "react-native-axios";
 
 const Categories = () => {
   const navigation = useNavigation()
-  const [categories, setCategories] = useState([
-    { category_id: 1, category_name: "Laptop", category_image: "https://i.imgur.com/qOLBSDX.png"  },
-    { category_id: 2, category_name: "Mouse", category_image: "https://i.imgur.com/qOLBSDX.png" },
-    { category_id: 3, category_name: "Keyboard", category_image: "https://i.imgur.com/qOLBSDX.png" },
-    { category_id: 4, category_name: "Headphone", category_image: "https://i.imgur.com/qOLBSDX.png" },
-    { category_id: 5, category_name: "Router", category_image: "https://i.imgur.com/qOLBSDX.png" },
-    { category_id: 6, category_name: "Phone", category_image: "https://i.imgur.com/qOLBSDX.png" },
-  ]);
+
+  const path = ""
+  const [categories, setCategories] = useState([])
+  useEffect(() => {
+    function fetchOne(x) {
+      axios
+        .get(`${axios.defaults.baseUrl}/categories`)
+        .then((res) => {
+          setCategories(res.data)
+        })
+        .catch((err) => console.error(err))
+    }
+    fetchOne(path)
+  }, [path])  
 
   return (
     <View style={styles.container}>

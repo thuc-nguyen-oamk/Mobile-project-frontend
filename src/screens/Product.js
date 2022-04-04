@@ -2,31 +2,46 @@ import {StyleSheet, Text, View, Image, FlatList, TouchableOpacity, Alert, Button
 import React from 'react';
 import { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "react-native-axios";
 
 const Product = (props) => {
   let product = props.route.params.product
 
-  const [productTypes, setProductTypes] = useState([
-    { product_detail_id: 1, product_color: "blue", product_price: 11, product_price_discounted: 1, product_stock: 0, product_id: 1, product_images: "https://i.imgur.com/s960jiH.png"},
-    { product_detail_id: 2, product_color: "red", product_price: 22, product_price_discounted: 2, product_stock: 200, product_id: 1, product_images: "https://i.imgur.com/cSZ2XJw.jpg"}
-  ])
+  const path = ""
+  const [productTypes, setProductTypes] = useState([])
+  useEffect(() => {
+    function fetchOne(x) {
+      axios
+        .get(`${axios.defaults.baseUrl}/products/${product.product_id}`)
+        .then((res) => {
+          let listProducts = res.data[0].details
+          setProductTypes(listProducts)
 
-  const [displayStock, setDisplayStock] = useState([productTypes[0].product_stock])
-  const [displayPrice, setDisplayPrice] = useState([productTypes[0].product_price])
-  const [displayPriceDiscounted, setDisplayPriceDiscounted] = useState([productTypes[0].product_price_discounted])
-  const [displayImage, setDisplayImage] = useState([productTypes[0].product_images])
-  const [choosenProduct, setChoosenProduct] = useState(productTypes[0]) 
+          setDisplayStock(listProducts[0].product_stock)
+          setDisplayPrice(listProducts[0].product_price)
+          setDisplayPriceDiscounted(listProducts[0].product_price_discounted)
+          setDisplayImage(listProducts[0].product_images.split(",")[0])
+          setChoosenProduct(listProducts[0]) 
+        })
+        .catch((err) => console.error(err))
+    }
+    fetchOne(path)
+  }, [path])
+
+  const [displayStock, setDisplayStock] = useState([product.product_stock_total])
+  const [displayPrice, setDisplayPrice] = useState([product.display_price])
+  const [displayPriceDiscounted, setDisplayPriceDiscounted] = useState([product.display_price_discounted])  
+  const [displayImage, setDisplayImage] = useState([product.display_image])
+  const [choosenProduct, setChoosenProduct] = useState([]) 
 
   const onPressTypeColor = (item) => {
     setDisplayStock(item.product_stock)
     setDisplayPrice(item.product_price)
     setDisplayPriceDiscounted(item.product_price_discounted)
-    setDisplayImage(item.product_images)
+    setDisplayImage(item.product_images.split(",")[0])
     setChoosenProduct(item)
   }
-
-  let linkImg = `${displayImage}`
-
+  
   const addToCart = async () => {
     if (choosenProduct.product_stock > 0) { 
       try {
@@ -57,7 +72,8 @@ const Product = (props) => {
             product_price: choosenProduct.product_price, 
             product_price_discounted: choosenProduct.product_price_discounted,
             product_color: choosenProduct.product_color, 
-            product_images: choosenProduct.product_images, 
+            // product_images: choosenProduct.product_images, 
+            product_images: choosenProduct.product_images.split(",")[0], 
             product_qty: 1,
           } 
           // console.log(currentProduct)
@@ -79,6 +95,8 @@ const Product = (props) => {
       alert("Sorry: out of stock")
     }
   }
+
+  let linkImg = `${axios.defaults.baseUrl}/images/${displayImage}`
 
   return (
     <View style={styles.container} flexDirection="column">
