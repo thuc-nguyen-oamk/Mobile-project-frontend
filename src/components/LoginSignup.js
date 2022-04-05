@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import Card from './Card';
 import axios from 'react-native-axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
 
 const LoginSignup = (props) => {
   const navigation = useNavigation()

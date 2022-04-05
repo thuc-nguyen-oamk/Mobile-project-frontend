@@ -1,27 +1,10 @@
 import {View, StyleSheet} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoginSignup from '../components/LoginSignup';
 import UserProfile from '../components/UserProfile';
 
-const User = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const token = await AsyncStorage.getItem('token')
-        if (token) {
-          setIsLoggedIn(true)
-        }
-      } catch (e) {
-        console.log(e)
-      }
-    };
-    checkToken();
-  }, []);
-  
+const User = ({isLoggedIn, setIsLoggedIn}) => {  
   return (
     <View style={styles.container}>
       {!isLoggedIn && <LoginSignup setIsLoggedIn={setIsLoggedIn} />}
