@@ -3,9 +3,11 @@ import React from 'react';
 import { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CartsItem from "../components/CartsItem";
+import { useNavigation } from '@react-navigation/native';
 
-const Carts = () => {
+const Carts = ({isLoggedIn}) => {
   const [cart, setCart] = useState([])
+  const navigation = useNavigation()
 
   useEffect(() => {
     const readStorage = async () => {
@@ -80,23 +82,38 @@ const Carts = () => {
 
   return (
     <View>
-      <FlatList
-        data={cart}
-        renderItem={({ item }) => 
-          <View style={styles.wrap}>
-            <CartsItem item={item} 
-              deleteItem={() => deleteItem(item.product_id, item.product_detail_id)}
-              downQty={() => downQty(item.product_id, item.product_detail_id)}
-              upQty={() => upQty(item.product_id, item.product_detail_id)}
-            />
+      {!isLoggedIn &&
+        <View style={styles.buttonContainer}>
+          <Text style={[styles.text, styles.alert]}>You need login to view your card</Text>
+          <Button
+            title="Click here to Login"
+            color="#fb70ff"
+            onPress={() => navigation.navigate('User')}
+          />
+        </View>
+      }
+
+      { isLoggedIn && 
+        <View>
+          <FlatList
+            data={cart}
+            renderItem={({ item }) => 
+              <View style={styles.wrap}>
+                <CartsItem item={item} 
+                  deleteItem={() => deleteItem(item.product_id, item.product_detail_id)}
+                  downQty={() => downQty(item.product_id, item.product_detail_id)}
+                  upQty={() => upQty(item.product_id, item.product_detail_id)}
+                />
+              </View>
+            }
+            keyExtractor={item => `${item.product_id} and ${item.product_detail_id}`}
+          />
+          <View style={styles.bottom}>
+            <Text style={styles.text}>Total: {getTotalPrice()}$</Text>
+            <Button title="Checkout" color="#f48cff" onPress={checkOut}/>
           </View>
-        }
-        keyExtractor={item => `${item.product_id} and ${item.product_detail_id}`}
-      />
-      <View style={styles.bottom}>
-        <Text style={styles.text}>Total: {getTotalPrice()}$</Text>
-        <Button title="Checkout" color="#f48cff" onPress={checkOut}/>
-      </View>
+        </View>
+      }
     </View>
   )
 }

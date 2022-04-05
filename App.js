@@ -112,9 +112,9 @@ function TabMe({products, isLoggedIn, setIsLoggedIn}) {
       <Tab.Screen name='Notification' component={Notifications}
         options={{ tabBarBadge: 0 }}
       />
-      <Tab.Screen name='Cart' component={Carts}
-        options={{ tabBarBadge: 0 }}
-      />
+      <Tab.Screen name='Cart' options={{ tabBarBadge: 0 }}>
+        {(props) => <Carts {...props} isLoggedIn={isLoggedIn} />}
+      </Tab.Screen>
       <Tab.Screen name='User'>
         {(props) => <User {...props} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
       </Tab.Screen>
