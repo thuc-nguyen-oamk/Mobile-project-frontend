@@ -4,17 +4,23 @@ import { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CartsItem from "../components/CartsItem";
 import { useNavigation } from '@react-navigation/native';
+import jwt_decode from "jwt-decode";
+import axios from 'react-native-axios';
 
 const Carts = ({isLoggedIn}) => {
-  const [cart, setCart] = useState([])
   const navigation = useNavigation()
-
+  const [cart, setCart] = useState([])
+  const [token, setToken] = useState("")
+  
+  const path = ""
   useEffect(() => {
     const readStorage = async () => {
       try {
         const cartString = await AsyncStorage.getItem('cart')
         let _cart = JSON.parse(cartString)
         // console.log('read x', _cart, typeof _cart);
+        const _token = await AsyncStorage.getItem('token')
+        setToken(_token)
         if (!_cart) {_cart = []}
         setCart(_cart)
       } catch (e) {
@@ -22,7 +28,8 @@ const Carts = ({isLoggedIn}) => {
       }
     }
     readStorage()
-  }, [cart])
+  }, [path])
+  
 
   const deleteItem = async (id, detail_id) => {
     try {
@@ -77,7 +84,37 @@ const Carts = ({isLoggedIn}) => {
   };
 
   const checkOut = () => {
-    console.log(cart)
+    let order_details = cart.map(function (item) {
+      return ({
+        product_id: item.product_id,
+        product_detail_id: item.product_detail_id,
+        product_name: item.product_name,
+        product_price: item.product_price_discounted,
+        product_amount: item.product_qty,
+      })
+    })
+
+    let decode = jwt_decode(token)
+
+    let order = {
+      customer_id: decode.customer_id,
+      order_address: decode.customer_address,
+      voucher_id: null,
+      order_total: getTotalPrice(),
+      order_details: order_details,
+    }
+    console.log(order)
+
+    axios
+      .post(`${axios.defaults.baseUrl}/order/add`, order)
+      .then(res => {
+        if (res.status === 200){
+          alert("Add new order succeeded")
+        } else {
+          alert("Fail due to something")
+        }
+      })
+      .catch(err => console.error(err));
   }
 
   return (

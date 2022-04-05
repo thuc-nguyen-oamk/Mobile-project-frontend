@@ -22,7 +22,8 @@ const LoginSignup = (props) => {
       .then(res => {
         const storeToken = async () => {
           try {
-            const token = res.data.token
+            let token = res.data.token
+            token = token.replace(/"/g, '');
             await AsyncStorage.setItem('token', token)
             axios.defaults.headers['Authorization'] = `Bearer ${token}`            
             alert("Login success")
