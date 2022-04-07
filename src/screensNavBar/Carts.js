@@ -12,7 +12,6 @@ const Carts = ({isLoggedIn}) => {
   const [cart, setCart] = useState([])
   const [token, setToken] = useState("")
   
-  const path = ""
   useEffect(() => {
     const readStorage = async () => {
       try {
@@ -28,7 +27,7 @@ const Carts = ({isLoggedIn}) => {
       }
     }
     readStorage()
-  }, [path])
+  }, [cart])
   
 
   const deleteItem = async (id, detail_id) => {
@@ -101,15 +100,28 @@ const Carts = ({isLoggedIn}) => {
       order_address: decode.customer_address,
       voucher_id: null,
       order_total: getTotalPrice(),
-      order_details: order_details,
+      order_detail: order_details,
     }
-    console.log(order)
+    // order = JSON.stringify(order) 
+    // console.log(order)
 
     axios
-      .post(`${axios.defaults.baseUrl}/order/add`, order)
+      .post(`${axios.defaults.baseUrl}/order/add`, order,
+        {
+          headers: {"content-type": "application/json"},
+        }
+      )
       .then(res => {
         if (res.status === 200){
           alert("Add new order succeeded")
+          const removeCart = async () => {
+            try {
+              await AsyncStorage.removeItem('cart')
+            } catch (e) {
+              // remove error
+            }
+          };
+          removeCart();
         } else {
           alert("Fail due to something")
         }
