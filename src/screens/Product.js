@@ -6,6 +6,8 @@ import axios from "react-native-axios";
 
 const Product = (props) => {
   let product = props.route.params.product
+  let qtyCart = props.qtyCart
+  let setQtyCart = props.setQtyCart
 
   const path = ""
   const [productTypes, setProductTypes] = useState([])
@@ -67,6 +69,9 @@ const Product = (props) => {
           } 
           cart.push(currentProduct)
           await AsyncStorage.setItem('cart', JSON.stringify(cart))
+
+          qtyCart +=1
+          setQtyCart(qtyCart)
         }
         else if (choosenProduct.product_stock > cart[indexCurrentProduct].product_qty) {
           cart[indexCurrentProduct].product_qty +=1

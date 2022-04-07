@@ -27,6 +27,7 @@ export default function App() {
   const path = ""
   const [products, setProducts] = useState([])
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [qtyCart, setQtyCart] = useState(0)
   useEffect(() => {
     function fetchOne(x) {
       axios
@@ -62,13 +63,16 @@ export default function App() {
             products={products}
             isLoggedIn={isLoggedIn}
             setIsLoggedIn={setIsLoggedIn}
+            qtyCart={qtyCart}
           />}
         </Stack.Screen>
 
         <Stack.Screen name="Category">
           {(props) => <Category {...props} products={products} />}
         </Stack.Screen>
-        <Stack.Screen name="Product" component={Product} />
+        <Stack.Screen name="Product">
+          {(props) => <Product {...props} qtyCart={qtyCart} setQtyCart={setQtyCart} />}
+        </Stack.Screen>
         <Stack.Screen name="SignUp" component={SignUp} />
       
       </Stack.Navigator>
@@ -77,7 +81,7 @@ export default function App() {
 }
 
 const Tab = createBottomTabNavigator()
-function TabMe({products, isLoggedIn, setIsLoggedIn}) {
+function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart}) {
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -112,7 +116,7 @@ function TabMe({products, isLoggedIn, setIsLoggedIn}) {
       <Tab.Screen name='Notification' component={Notifications}
         options={{ tabBarBadge: 0 }}
       />
-      <Tab.Screen name='Cart' options={{ tabBarBadge: 0 }}>
+      <Tab.Screen name='Cart' options={{ tabBarBadge: qtyCart }}>
         {(props) => <Carts {...props} isLoggedIn={isLoggedIn} />}
       </Tab.Screen>
       <Tab.Screen name='User'>
