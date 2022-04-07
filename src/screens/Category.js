@@ -1,25 +1,10 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import Products from "../components/Products";
-import { useState, useEffect } from "react";
-import axios from "react-native-axios";
 
 const Category = (props) => {
   let category = props.route.params.category
-
-  const path = ""
-  const [products, setProducts] = useState([])
-  useEffect(() => {
-    function fetchOne(x) {
-      axios
-        .get(`${axios.defaults.baseUrl}/products/`)
-        .then((res) => {
-          setProducts(res.data)
-        })
-        .catch((err) => console.error(err))
-    }
-    fetchOne(path)
-  }, [path]) 
+  let products = props.products
 
   return (
     <View style={styles.container}>

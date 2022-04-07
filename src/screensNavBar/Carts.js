@@ -3,16 +3,23 @@ import React from 'react';
 import { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CartsItem from "../components/CartsItem";
+import { useNavigation } from '@react-navigation/native';
+import jwt_decode from "jwt-decode";
+import axios from 'react-native-axios';
 
-const Carts = () => {
+const Carts = ({isLoggedIn}) => {
+  const navigation = useNavigation()
   const [cart, setCart] = useState([])
-
+  const [token, setToken] = useState("")
+  
   useEffect(() => {
     const readStorage = async () => {
       try {
         const cartString = await AsyncStorage.getItem('cart')
         let _cart = JSON.parse(cartString)
         // console.log('read x', _cart, typeof _cart);
+        const _token = await AsyncStorage.getItem('token')
+        setToken(_token)
         if (!_cart) {_cart = []}
         setCart(_cart)
       } catch (e) {
@@ -21,6 +28,7 @@ const Carts = () => {
     }
     readStorage()
   }, [cart])
+  
 
   const deleteItem = async (id, detail_id) => {
     try {
@@ -75,28 +83,86 @@ const Carts = () => {
   };
 
   const checkOut = () => {
-    console.log(cart)
+    let order_details = cart.map(function (item) {
+      return ({
+        product_id: item.product_id,
+        product_detail_id: item.product_detail_id,
+        product_name: item.product_name,
+        product_price: item.product_price_discounted,
+        product_amount: item.product_qty,
+      })
+    })
+
+    let decode = jwt_decode(token)
+
+    let order = {
+      customer_id: decode.customer_id,
+      order_address: decode.customer_address,
+      voucher_id: null,
+      order_total: getTotalPrice(),
+      order_detail: order_details,
+    }
+    // order = JSON.stringify(order) 
+    // console.log(order)
+
+    axios
+      .post(`${axios.defaults.baseUrl}/order/add`, order,
+        {
+          headers: {"content-type": "application/json"},
+        }
+      )
+      .then(res => {
+        if (res.status === 200){
+          alert("Add new order succeeded")
+          const removeCart = async () => {
+            try {
+              await AsyncStorage.removeItem('cart')
+            } catch (e) {
+              // remove error
+            }
+          };
+          removeCart();
+        } else {
+          alert("Fail due to something")
+        }
+      })
+      .catch(err => console.error(err));
   }
 
   return (
     <View>
-      <FlatList
-        data={cart}
-        renderItem={({ item }) => 
-          <View style={styles.wrap}>
-            <CartsItem item={item} 
-              deleteItem={() => deleteItem(item.product_id, item.product_detail_id)}
-              downQty={() => downQty(item.product_id, item.product_detail_id)}
-              upQty={() => upQty(item.product_id, item.product_detail_id)}
-            />
+      {!isLoggedIn &&
+        <View style={styles.buttonContainer}>
+          <Text style={[styles.text, styles.alert]}>You need login to view your card</Text>
+          <Button
+            title="Click here to Login"
+            color="#fb70ff"
+            onPress={() => navigation.navigate('User')}
+          />
+        </View>
+      }
+
+      { isLoggedIn && 
+        <View>
+          <FlatList
+            data={cart}
+            renderItem={({ item }) => 
+              <View style={styles.wrap}>
+                <CartsItem item={item} 
+                  deleteItem={() => deleteItem(item.product_id, item.product_detail_id)}
+                  downQty={() => downQty(item.product_id, item.product_detail_id)}
+                  upQty={() => upQty(item.product_id, item.product_detail_id)}
+                />
+              </View>
+            }
+            keyExtractor={item => `${item.product_id} and ${item.product_detail_id}`}
+          />
+          <View style={styles.bottom}>
+            <Text style={styles.text}>Total: {getTotalPrice()}$</Text>
+            <Button title="Checkout" color="#f48cff" onPress={checkOut}/>
           </View>
-        }
-        keyExtractor={item => `${item.product_id} and ${item.product_detail_id}`}
-      />
-      <View style={styles.bottom}>
-        <Text style={styles.text}>Total: {getTotalPrice()}$</Text>
-        <Button title="Checkout" color="#f48cff" onPress={checkOut}/>
-      </View>
+        </View>
+      }
     </View>
   )
 }

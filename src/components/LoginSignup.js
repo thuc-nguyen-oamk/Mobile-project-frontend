@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import Card from './Card';
 import axios from 'react-native-axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
 
 const LoginSignup = (props) => {
   const navigation = useNavigation()
@@ -22,9 +22,10 @@ const LoginSignup = (props) => {
       .then(res => {
         const storeToken = async () => {
           try {
-            const token = res.data.token
+            let token = res.data.token
+            token = token.replace(/"/g, '');
             await AsyncStorage.setItem('token', token)
-            axios.defaults.headers['Authorization'] = `Bearer ${token}`            
+            axios.defaults.headers['Authorization'] = `Bearer ${token}`
             alert("Login success")
             props.setIsLoggedIn(true)
           } catch (e) {

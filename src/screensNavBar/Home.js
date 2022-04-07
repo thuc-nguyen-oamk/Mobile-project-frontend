@@ -1,28 +1,15 @@
 import React from "react";
-import { View, StyleSheet, TextInput, Keyboard, Button, Image } from "react-native";
+import { View, StyleSheet, TextInput, Image } from "react-native";
 import Products from "../components/Products";
 import { Picker } from '@react-native-picker/picker';
 import { useState, useEffect } from "react";
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from "react-native-axios";
 
-const Home = () => {
+const Home = ({products}) => {
   const [searchText, setSearchText] = useState("")
-
+        
   const path = ""
-  const [products, setProducts] = useState([])
-  useEffect(() => {
-    function fetchOne(x) {
-      axios
-        .get(`${axios.defaults.baseUrl}/products/`)
-        .then((res) => {
-          setProducts(res.data)
-        })
-        .catch((err) => console.error(err))
-    }
-    fetchOne(path)
-  }, [path])  
-
   const [brands, setBrands] = useState([])
   useEffect(() => {
     function fetchOne(x) {

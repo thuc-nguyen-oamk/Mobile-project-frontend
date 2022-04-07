@@ -67,7 +67,7 @@ const Product = (props) => {
           // currentProduct = {
           let currentProduct = {
             product_detail_id: choosenProduct.product_detail_id,
-            product_id: choosenProduct.product_id,
+            product_id: product.product_id,
             product_name: product.product_name,
             product_price: choosenProduct.product_price, 
             product_price_discounted: choosenProduct.product_price_discounted,

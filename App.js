@@ -17,29 +17,67 @@ import SignUp from './src/screens/SignUp';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'react-native-axios';
+import { useState, useEffect } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator()
 export default function App() {
   axios.defaults.baseUrl = "https://api.uniproject.xyz/eshopmb/"
+
+  const path = ""
+  const [products, setProducts] = useState([])
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  useEffect(() => {
+    function fetchOne(x) {
+      axios
+        .get(`${axios.defaults.baseUrl}/products/`)
+        .then((res) => {
+          setProducts(res.data)
+        })
+        .catch((err) => console.error(err))
+    }
+    fetchOne(path)
+
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token')
+        if (token) {
+          setIsLoggedIn(true)
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    };
+    checkToken();
+  }, [path]) 
+  
   return (
     <NavigationContainer style={styles.container}>
       <Text style={styles.header}></Text>
 
       <Stack.Navigator screenOptions={{headerShown:false}}>      
-        <Stack.Screen
-          name="TabMe"
-          component={TabMe}
-        />
-        <Stack.Screen name="Category" component={Category} />
+        
+        <Stack.Screen name="TabMe">
+          {(props) => <TabMe {...props}
+            products={products}
+            isLoggedIn={isLoggedIn}
+            setIsLoggedIn={setIsLoggedIn}
+          />}
+        </Stack.Screen>
+
+        <Stack.Screen name="Category">
+          {(props) => <Category {...props} products={products} />}
+        </Stack.Screen>
         <Stack.Screen name="Product" component={Product} />
         <Stack.Screen name="SignUp" component={SignUp} />
+      
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 const Tab = createBottomTabNavigator()
-function TabMe() {
+function TabMe({products, isLoggedIn, setIsLoggedIn}) {
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -67,19 +105,22 @@ function TabMe() {
         headerShown: false,
       })}
     >
-      <Tab.Screen name='Home' component={Home} />
+      <Tab.Screen name='Home'>
+        {(props) => <Home {...props} products={products} />}
+      </Tab.Screen>
       <Tab.Screen name='Category' component={Categories}/>
       <Tab.Screen name='Notification' component={Notifications}
         options={{ tabBarBadge: 0 }}
       />
-      <Tab.Screen name='Cart' component={Carts}
-        options={{ tabBarBadge: 0 }}
-      />
-      <Tab.Screen name='User' component={User}/>
+      <Tab.Screen name='Cart' options={{ tabBarBadge: 0 }}>
+        {(props) => <Carts {...props} isLoggedIn={isLoggedIn} />}
+      </Tab.Screen>
+      <Tab.Screen name='User'>
+        {(props) => <User {...props} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
+      </Tab.Screen>
     </Tab.Navigator>
   )
 };
-
 
 const styles = StyleSheet.create({
 });
