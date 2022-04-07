@@ -9,6 +9,12 @@ const Product = (props) => {
 
   const path = ""
   const [productTypes, setProductTypes] = useState([])
+  const [displayStock, setDisplayStock] = useState([product.product_stock_total])
+  const [displayPrice, setDisplayPrice] = useState([product.display_price])
+  const [displayPriceDiscounted, setDisplayPriceDiscounted] = useState([product.display_price_discounted])  
+  const [displayImage, setDisplayImage] = useState([product.display_image])
+  const [choosenProduct, setChoosenProduct] = useState([]) 
+
   useEffect(() => {
     function fetchOne(x) {
       axios
@@ -28,12 +34,6 @@ const Product = (props) => {
     fetchOne(path)
   }, [path])
 
-  const [displayStock, setDisplayStock] = useState([product.product_stock_total])
-  const [displayPrice, setDisplayPrice] = useState([product.display_price])
-  const [displayPriceDiscounted, setDisplayPriceDiscounted] = useState([product.display_price_discounted])  
-  const [displayImage, setDisplayImage] = useState([product.display_image])
-  const [choosenProduct, setChoosenProduct] = useState([]) 
-
   const onPressTypeColor = (item) => {
     setDisplayStock(item.product_stock)
     setDisplayPrice(item.product_price)
@@ -49,22 +49,12 @@ const Product = (props) => {
         const cartString = await AsyncStorage.getItem('cart')
         let cart = JSON.parse(cartString)
         if (!cart) {cart = []}
-        
-        // let indexCurrentProduct = 0
-        // let currentProduct = cart.find(function (p,i) { 
-        //   if (p.product_detail_id === choosenProduct.product_detail_id && p.product_id === choosenProduct.product_id) {
-        //     indexCurrentProduct = i
-        //     return i
-        //   }
-        // })
 
         let indexCurrentProduct = cart.findIndex(function (p, i) {
-          return (p.product_detail_id === choosenProduct.product_detail_id && p.product_id === choosenProduct.product_id)
+          return (p.product_detail_id === choosenProduct.product_detail_id)
         });
 
-        // if (!currentProduct) {
         if (indexCurrentProduct === -1) {
-          // currentProduct = {
           let currentProduct = {
             product_detail_id: choosenProduct.product_detail_id,
             product_id: product.product_id,
@@ -72,21 +62,21 @@ const Product = (props) => {
             product_price: choosenProduct.product_price, 
             product_price_discounted: choosenProduct.product_price_discounted,
             product_color: choosenProduct.product_color, 
-            // product_images: choosenProduct.product_images, 
             product_images: choosenProduct.product_images.split(",")[0], 
             product_qty: 1,
           } 
-          // console.log(currentProduct)
           cart.push(currentProduct)
           await AsyncStorage.setItem('cart', JSON.stringify(cart))
         }
-        else {
+        else if (choosenProduct.product_stock > cart[indexCurrentProduct].product_qty) {
           cart[indexCurrentProduct].product_qty +=1
           await AsyncStorage.setItem('cart', JSON.stringify(cart))
         }
-
+        else {
+          alert("Sorry: your product in shopping-cart is larger than our stock")
+          return
+        }
         alert("Added to cart.")
-        setDisplayStock(displayStock-1)
       } catch (e) {
         console.error(e)
       }
