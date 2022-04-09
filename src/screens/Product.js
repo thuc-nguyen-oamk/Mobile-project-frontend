@@ -5,9 +5,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "react-native-axios";
 
 const Product = (props) => {
+  // let ^^
   let product = props.route.params.product
   let qtyCart = props.qtyCart
   let setQtyCart = props.setQtyCart
+  let cart = props.cart
+  let setCart = props.setCart
 
   const path = ""
   const [productTypes, setProductTypes] = useState([])
@@ -48,10 +51,6 @@ const Product = (props) => {
     if (choosenProduct.product_stock > 0) { 
       try {
         // await AsyncStorage.removeItem('cart')
-        const cartString = await AsyncStorage.getItem('cart')
-        let cart = JSON.parse(cartString)
-        if (!cart) {cart = []}
-
         let indexCurrentProduct = cart.findIndex(function (p, i) {
           return (p.product_detail_id === choosenProduct.product_detail_id)
         });
@@ -66,16 +65,20 @@ const Product = (props) => {
             product_color: choosenProduct.product_color, 
             product_images: choosenProduct.product_images.split(",")[0], 
             product_qty: 1,
-          } 
+          }
+
           cart.push(currentProduct)
           await AsyncStorage.setItem('cart', JSON.stringify(cart))
-
+          setCart(cart)
+          
           qtyCart +=1
+          await AsyncStorage.setItem('qtyCart', qtyCart.toString())
           setQtyCart(qtyCart)
         }
         else if (choosenProduct.product_stock > cart[indexCurrentProduct].product_qty) {
           cart[indexCurrentProduct].product_qty +=1
           await AsyncStorage.setItem('cart', JSON.stringify(cart))
+          setCart(cart)
         }
         else {
           alert("Sorry: your product in shopping-cart is larger than our stock")
