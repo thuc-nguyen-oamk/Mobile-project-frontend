@@ -7,27 +7,22 @@ import { useNavigation } from '@react-navigation/native';
 import jwt_decode from "jwt-decode";
 import axios from 'react-native-axios';
 
-const Carts = ({isLoggedIn}) => {
+const Carts = ({isLoggedIn, qtyCart, setQtyCart, cart, setCart}) => {
   const navigation = useNavigation()
-  const [cart, setCart] = useState([])
   const [token, setToken] = useState("")
   
+  const path = ""
   useEffect(() => {
     const readStorage = async () => {
       try {
-        const cartString = await AsyncStorage.getItem('cart')
-        let _cart = JSON.parse(cartString)
-        // console.log('read x', _cart, typeof _cart);
         const _token = await AsyncStorage.getItem('token')
         setToken(_token)
-        if (!_cart) {_cart = []}
-        setCart(_cart)
       } catch (e) {
         console.error(e)
       }
     }
     readStorage()
-  }, [cart])
+  }, [path])
   
 
   const deleteItem = async (id, detail_id) => {
@@ -38,6 +33,9 @@ const Carts = ({isLoggedIn}) => {
       cart.splice(currentIndex, 1)
       await AsyncStorage.setItem('cart', JSON.stringify(cart))
       setCart([...cart])
+      qtyCart -=1
+      await AsyncStorage.setItem('qtyCart', qtyCart.toString())
+      setQtyCart(qtyCart)
     } catch (e) {
       console.error(e)
     }
@@ -51,7 +49,7 @@ const Carts = ({isLoggedIn}) => {
       let currentIndex = cart.findIndex(function (p, i) {
         return (p.product_id === id && p.product_detail_id === detail_id)
       });
-      cart[currentIndex].product_qty -= (cart[currentIndex].product_qty === 0) ? 0 : 1
+      cart[currentIndex].product_qty -= (cart[currentIndex].product_qty === 1) ? 0 : 1
       await AsyncStorage.setItem('cart', JSON.stringify(cart))
       setCart([...cart])
     } catch (e) {
@@ -114,14 +112,18 @@ const Carts = ({isLoggedIn}) => {
       .then(res => {
         if (res.status === 200){
           alert("Add new order succeeded")
-          const removeCart = async () => {
+          const remove = async () => {
             try {
               await AsyncStorage.removeItem('cart')
+              qtyCart = 0
+              await AsyncStorage.setItem('qtyCart', qtyCart.toString())
+              setQtyCart(qtyCart)
             } catch (e) {
               // remove error
             }
           };
-          removeCart();
+          remove();
+
         } else {
           alert("Fail due to something")
         }
