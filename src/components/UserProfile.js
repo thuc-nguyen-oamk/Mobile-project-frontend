@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Button } from 'react-native'
+import { View, Text, StyleSheet, Button, TouchableOpacity, Image, Icon } from 'react-native'
 import React from 'react'
 import axios from 'react-native-axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
