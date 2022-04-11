@@ -4,18 +4,34 @@ import axios from 'react-native-axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useState, useEffect } from "react";
+import jwt_decode from "jwt-decode";
 
 const UserProfile = (props) => {
-
   const navigation = useNavigation()
+  const [decode, setDecode] = useState({})
+  
+  const path = ""
+  useEffect(() => {
+    const readStorage = async () => {
+      try {
+        const _token = await AsyncStorage.getItem('token')
+        let _decode = jwt_decode(_token)
+        setDecode(_decode)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    readStorage()
+  }, [path])
   
   const logOut = () => {
     const removeToken = async () => {
       try {
         const token = await AsyncStorage.getItem('token')
-          await AsyncStorage.removeItem('token')
-          delete axios.defaults.headers["Authorization"]
-          alert("Logout success")
+        await AsyncStorage.removeItem('token')
+        delete axios.defaults.headers["Authorization"]
+        alert("Logout success")
       } catch (e) {
         // remove error
       }
@@ -31,21 +47,24 @@ const UserProfile = (props) => {
           <Image style={styles.img} source={{uri: "https://i.imgur.com/a5piz6z.png"}} />
         </View>
         <View style={styles.right}>
-          <Text style={{fontWeight: "bold", fontSize:20}}>Welcome USER</Text>
+          <Text style={{fontWeight: "bold", fontSize:20}}>
+            Welcome {(decode.customer_name) ? decode.customer_name.toUpperCase(): ""}
+          </Text>
           <View style={{backgroundColor:"#fff", padding:2, borderRadius:2}}>
             <Button title="Logout" color="#fb70ff" borderColor= "#fff" onPress={logOut} />
           </View>
         </View>
       </View>
 
-      
       <TouchableOpacity style={styles.row}>
         <Icon name="cart-outline" style={styles.icon} />
         <Text style={styles.text}>My orders history</Text>          
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.row}
-                        onPress ={() => {navigation.navigate ('EditProfile')}}
+        onPress ={({decode}) => navigation.navigate ('EditProfile', {
+          decode: decode
+        })}
       >
         <Icon name="person-circle-outline" style={styles.icon} />  
         <Text style={styles.text}>Edit</Text>   

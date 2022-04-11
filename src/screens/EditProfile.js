@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, TouchableOpacity, ImageBackground, TextInput} from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'react-native-axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -12,10 +12,26 @@ import BottomSheet from 'reanimated-bottom-sheet';
 
 import ImagePicker from 'react-native-image-crop-picker';
 import { GestureDetector } from 'react-native-gesture-handler';
+import jwt_decode from "jwt-decode";
 
-
-const EditProfile = () => {
+const EditProfile = (props) => {
   const [image, setImage] = useState('https://i.imgur.com/a5piz6z.png');
+  // let decode = props.decode
+  const [decode, setDecode] = useState({})
+  
+  const path = ""
+  useEffect(() => {
+    const readStorage = async () => {
+      try {
+        const _token = await AsyncStorage.getItem('token')
+        let _decode = jwt_decode(_token)
+        setDecode(_decode)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    readStorage()
+  }, [path])
 
   const takePhotoFromCamera = () => {
     ImagePicker.openCamera({
@@ -139,7 +155,7 @@ const EditProfile = () => {
           </TouchableOpacity>
 
           <Text style={{marginTop: 10, fontSize: 18, fontWeight: 'bold'}}>
-            USER'S NAME
+            {(decode.customer_name) ? decode.customer_name.toUpperCase(): ""}
           </Text>
         </View>
 
