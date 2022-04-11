@@ -116,7 +116,7 @@ const EditProfile = (props) => {
           margin: 20,
           opacity: Animated.add(0.1, Animated.multiply(this.fall, 1.0)),
         }}>
-        <View style={{alignItems: 'center'}}>
+        <View style={{alignItems: 'center', marginBottom:20}}>
           <TouchableOpacity onPress={() => sheetRef.current.snapTo(0)}>
             <View
               style={{
@@ -159,25 +159,6 @@ const EditProfile = (props) => {
           </Text>
         </View>
 
-        <View style={styles.action}>
-          <FontAwesome name="user-o" color="blue" size={20} />
-          <TextInput
-            placeholder="First Name"
-            placeholderTextColor="black"
-            autoCorrect={false}
-            style={styles.textInput}
-          />
-        </View>
-
-        <View style={styles.action}>
-          <FontAwesome name="user-o" color="blue" size={20} />
-          <TextInput
-            placeholder="Last Name"
-            placeholderTextColor="black"
-            autoCorrect={false}
-            style={styles.textInput}
-          />
-        </View>
         <View style={styles.action}>
           <Feather name="phone" color="blue" size={20} />
           <TextInput
