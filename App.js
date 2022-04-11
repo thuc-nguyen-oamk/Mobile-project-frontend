@@ -14,6 +14,7 @@ import User from "./src/screensNavBar/User";
 import Category from "./src/screens/Category";
 import Product from './src/screens/Product';
 import SignUp from './src/screens/SignUp';
+import EditProfile from './src/screens/EditProfile';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'react-native-axios';
@@ -87,6 +88,7 @@ export default function App() {
           }
         </Stack.Screen>
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
       
       </Stack.Navigator>
     </NavigationContainer>

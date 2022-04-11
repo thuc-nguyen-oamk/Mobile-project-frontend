@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, Button, TouchableOpacity, Image, Icon } from 'react-native'
+import { View, Text, StyleSheet, Button, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import axios from 'react-native-axios';
 import AsyncStorage from '@react-native-async-storage/async-storage'; 
 import { useNavigation } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const UserProfile = (props) => {
 
@@ -24,39 +25,39 @@ const UserProfile = (props) => {
   }
   return (
     <View style={styles.container}>
-  
-        <TouchableOpacity style={styles.header}>
-          <View style={styles.left}>
-            <Image style={styles.img} source={{uri: "https://i.imgur.com/a5piz6z.png"}} />
+
+      <View style={styles.header}>
+        <View style={styles.left}>
+          <Image style={styles.img} source={{uri: "https://i.imgur.com/a5piz6z.png"}} />
+        </View>
+        <View style={styles.right}>
+          <Text style={{fontWeight: "bold", fontSize:20}}>Welcome USER</Text>
+          <View style={{backgroundColor:"#fff", padding:2, borderRadius:2}}>
+            <Button title="Logout" color="#fb70ff" borderColor= "#fff" onPress={logOut} />
           </View>
-          <View style={styles.right}>
-            <Text style={{fontWeight: "bold", fontSize:20}}>Welcome USER</Text>
-            <View style={{backgroundColor:"#fff", padding:2, borderRadius:2}}>
-              <Button title="Logout" color="#fb70ff" borderColor= "#fff" onPress={logOut} />
-            </View>
-          </View>
-        </TouchableOpacity>
-  
-        
-        <TouchableOpacity style={styles.row}>         
-            <Icon name="cart-outline" style={styles.icon} />
-            <Text style={styles.text}>My orders history</Text>          
-        </TouchableOpacity>
-  
-        <TouchableOpacity style={styles.row}
-                          onPress ={() => {navigation.navigate ('EditProfile')}}
-        >
-            <Icon name="person-circle-outline" style={styles.icon} />  
-            <Text style={styles.text}>Edit</Text>   
-        </TouchableOpacity>
-  
-        <TouchableOpacity style={styles.row}>
-            <Icon name="help-circle-outline" style={styles.icon} />
-            <Text style={styles.text}>Help center</Text>
-        </TouchableOpacity>
+        </View>
       </View>
+
+      
+      <TouchableOpacity style={styles.row}>
+        <Icon name="cart-outline" style={styles.icon} />
+        <Text style={styles.text}>My orders history</Text>          
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.row}
+                        onPress ={() => {navigation.navigate ('EditProfile')}}
+      >
+        <Icon name="person-circle-outline" style={styles.icon} />  
+        <Text style={styles.text}>Edit</Text>   
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.row}>
+        <Icon name="help-circle-outline" style={styles.icon} />
+        <Text style={styles.text}>Help center</Text>
+      </TouchableOpacity>
+    </View>
      
-    )
+  )
 }
   
 export default UserProfile; 
