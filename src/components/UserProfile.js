@@ -62,7 +62,7 @@ const UserProfile = (props) => {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.row}
-        onPress ={({decode}) => navigation.navigate ('EditProfile', {
+        onPress ={() => navigation.navigate ('EditProfile', {
           decode: decode
         })}
       >

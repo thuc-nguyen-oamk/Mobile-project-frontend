@@ -17,8 +17,7 @@ import jwt_decode from "jwt-decode";
 const EditProfile = (props) => {
   const [image, setImage] = useState('https://i.imgur.com/a5piz6z.png');
   // let decode = props.decode
-  const [decode, setDecode] = useState({})
-  
+  const [decode, setDecode] = useState({})  
   const path = ""
   useEffect(() => {
     const readStorage = async () => {
@@ -162,7 +161,7 @@ const EditProfile = (props) => {
         <View style={styles.action}>
           <Feather name="phone" color="blue" size={20} />
           <TextInput
-            placeholder="Phone"
+            placeholder={decode.customer_phone}
             placeholderTextColor="black"
             keyboardType="number-pad"
             autoCorrect={false}
@@ -172,17 +171,7 @@ const EditProfile = (props) => {
         <View style={styles.action}>
           <FontAwesome name="envelope-o" color="blue" size={20} />
           <TextInput
-            placeholder="Email"
-            placeholderTextColor="black"
-            keyboardType="email-address"
-            autoCorrect={false}
-            style={styles.textInput}
-          />
-        </View>
-        <View style={styles.action}>
-          <Icon name="onepassword" color="blue" size={20} />
-          <TextInput
-            placeholder="Password"
+            placeholder={decode.customer_email}
             placeholderTextColor="black"
             keyboardType="email-address"
             autoCorrect={false}
@@ -192,8 +181,38 @@ const EditProfile = (props) => {
         <View style={styles.action}>
           <Icon name="map-marker-outline" color="blue" size={20} />
           <TextInput
-            placeholder="Address"
+            placeholder={decode.customer_address}
             placeholderTextColor="black"
+            autoCorrect={false}
+            style={styles.textInput}
+          />
+        </View>
+        <View style={styles.action}>
+          <Icon name="onepassword" color="blue" size={20} />
+          <TextInput
+            placeholder="Old Password"
+            placeholderTextColor="black"
+            keyboardType="email-address"
+            autoCorrect={false}
+            style={styles.textInput}
+          />
+        </View>
+        <View style={styles.action}>
+          <Icon name="onepassword" color="blue" size={20} />
+          <TextInput
+            placeholder="New Password"
+            placeholderTextColor="black"
+            keyboardType="email-address"
+            autoCorrect={false}
+            style={styles.textInput}
+          />
+        </View>
+        <View style={styles.action}>
+          <Icon name="onepassword" color="blue" size={20} />
+          <TextInput
+            placeholder="Confirm New Password"
+            placeholderTextColor="black"
+            keyboardType="email-address"
             autoCorrect={false}
             style={styles.textInput}
           />
