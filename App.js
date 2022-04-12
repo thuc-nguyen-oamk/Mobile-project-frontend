@@ -14,6 +14,7 @@ import User from "./src/screensNavBar/User";
 import Category from "./src/screens/Category";
 import Product from './src/screens/Product';
 import SignUp from './src/screens/SignUp';
+import Chat from "./src/screensNavBar/Chat";
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'react-native-axios';
@@ -113,6 +114,8 @@ function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, 
             iconName = focused ? 'cart': 'cart-outline'
           } else if (route.name === 'User') {
             iconName = focused ? 'settings': 'settings-outline'
+          } else if (route.name === 'Chat') {
+            iconName = focused ? 'chatbubbles': 'chatbubbles-outline'
           }
 
           return <Icon name={iconName} size={size} color={color} />
@@ -139,6 +142,7 @@ function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, 
       <Tab.Screen name='User'>
         {(props) => <User {...props} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
       </Tab.Screen>
+      <Tab.Screen name='Chat' component={Chat}/>
     </Tab.Navigator>
   )
 };
