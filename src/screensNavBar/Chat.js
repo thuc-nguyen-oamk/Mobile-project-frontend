@@ -89,6 +89,7 @@ export default function Chat({navigation}) {
   const MessageItem = ({item}) => {
     return (
       <View>
+        <Text style={styles.incomingName}>{item.sender_id == customerId ? "" : "Shop owner"}</Text>
         <Text
           style={
             item.sender_id == customerId
@@ -169,6 +170,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
   },
+  incomingName:{
+    marginLeft: 15,
+    fontSize: 10,
+    color: '#ccc',
+  },
   outgoing: {
     alignSelf: 'flex-end',
     backgroundColor: '#f9abf9',
@@ -187,4 +193,5 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 10,
   },
+  
 });
