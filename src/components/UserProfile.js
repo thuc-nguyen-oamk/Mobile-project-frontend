@@ -56,7 +56,11 @@ const UserProfile = (props) => {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.row}>
+      <TouchableOpacity style={styles.row}
+        onPress ={() => navigation.navigate ('OrderHistory', {
+          decode: decode
+        })}
+      >
         <Icon name="cart-outline" style={styles.icon} />
         <Text style={styles.text}>My orders history</Text>          
       </TouchableOpacity>
