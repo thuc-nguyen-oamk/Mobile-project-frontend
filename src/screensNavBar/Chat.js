@@ -1,5 +1,5 @@
 import jwt_decode from 'jwt-decode';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState,useRef} from 'react';
 import {FlatList, StyleSheet, Text, TextInput, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import io from 'socket.io-client';
@@ -9,6 +9,9 @@ export default function Chat({navigation}) {
   const [messageList, setMessageList] = useState([]);
   const [customerId, setCustomerId] = useState('');
   const [adminId, setAdminId] = useState('7252643');
+
+  const flatListRef = useRef(null);
+  
   console.log('Chat comp is rendered');
   console.log('messageList:', messageList);
   console.log('messageList:', messageList);
@@ -109,6 +112,8 @@ export default function Chat({navigation}) {
           <Text style={styles.title}>Contact Store</Text>
         </View>
         <FlatList
+        ref={flatListRef}
+        onContentSizeChange={() => flatListRef.current.scrollToEnd()}
           data={messageList}
           keyExtractor={(item, index) => index.toString()}
           renderItem={MessageItem}
