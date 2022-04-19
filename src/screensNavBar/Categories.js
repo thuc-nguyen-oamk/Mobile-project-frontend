@@ -48,7 +48,7 @@ export default Categories
 
 const styles = StyleSheet.create({
   wrap: {
-    flex: 1,
+    flex: 1/2,
     paddingHorizontal: 8,
     paddingTop: 16,
   },
