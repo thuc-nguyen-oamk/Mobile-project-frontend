@@ -16,6 +16,7 @@ import Product from './src/screens/Product';
 import SignUp from './src/screens/SignUp';
 import EditProfile from './src/screens/EditProfile';
 import Chat from "./src/screensNavBar/Chat";
+import OrderHistory from './src/screens/OrderHistory';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'react-native-axios';
@@ -90,7 +91,7 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
-      
+        <Stack.Screen name="OrderHistory" component={OrderHistory} />
       </Stack.Navigator>
     </NavigationContainer>
   );
