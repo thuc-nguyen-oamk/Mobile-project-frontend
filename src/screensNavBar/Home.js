@@ -11,8 +11,9 @@ const Home = ({products}) => {
         
   const path = ""
   const [brands, setBrands] = useState([])
+  const [banner, setBanner] = useState({})
   useEffect(() => {
-    function fetchOne(x) {
+    function fetch(x) {
       axios
         .get(`${axios.defaults.baseUrl}/products/brands`)
         .then((res) => {
@@ -24,7 +25,18 @@ const Home = ({products}) => {
         })
         .catch((err) => console.error(err))
     }
-    fetchOne(path)
+    fetch(path)
+    
+    function fetch1(x) {
+      axios
+        .get(`${axios.defaults.baseUrl}/banner`)
+        .then((res) => {
+          let _banners = res.data.bannerList
+          setBanner(_banners[_banners.length-1])
+        })
+        .catch((err) => console.error(err))
+    }
+    fetch1(path)
   }, [path])
 
   const [selectedValue, setSelectedValue] = useState(0)
@@ -32,8 +44,8 @@ const Home = ({products}) => {
   function onSearchTextChange(text) {
     setSearchText(text)
   }
-
-  const linkImg = `https://i.imgur.com/zJ1hfKz.png`
+  
+  let linkImg = `${axios.defaults.baseUrl}/images/${banner.banner_image}`
   const size = 24
   return (
     <View style={styles.container}>
@@ -65,7 +77,9 @@ const Home = ({products}) => {
         </Picker>
       </View>
 
-      <Image style={styles.banner} source={{uri: linkImg}} />
+      <View style={styles.img}>
+        <Image style={styles.banner} source={{uri: linkImg}} />
+      </View>
 
       <Products
         products={products.filter((item) =>
@@ -74,7 +88,7 @@ const Home = ({products}) => {
           : (item.product_name.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()) &&
           item.product_brand === brands[selectedValue - 1].name)
           )}
-          />
+      />
     </View>
   )
 }
@@ -86,12 +100,6 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "black"
-  },
-  banner: {
-    textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 36,
-    color: "red"
   },
   picker: {
     height: 50, 
@@ -116,9 +124,13 @@ const styles = StyleSheet.create({
   },
   banner: {
     width: "98%",
-    height: 200,
+    minHeight: 90,
+    aspectRatio: 3.5, // When load img into backend, should set image size
     margin: 10,
     marginTop: 20,
+  },
+  img: {
+    width: "98%",
   }
 })
 

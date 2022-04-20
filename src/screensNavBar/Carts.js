@@ -115,6 +115,7 @@ const Carts = ({isLoggedIn, qtyCart, setQtyCart, cart, setCart}) => {
           const remove = async () => {
             try {
               await AsyncStorage.removeItem('cart')
+              setCart([])  // if not, can't rerender !!!
               qtyCart = 0
               await AsyncStorage.setItem('qtyCart', qtyCart.toString())
               setQtyCart(qtyCart)
