@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
   banner: {
     width: "98%",
-    minHeight: 150,
+    minHeight: 90,
     aspectRatio: 3.5, // When load img into backend, should set image size
     margin: 10,
     marginTop: 20,
