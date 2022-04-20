@@ -51,7 +51,9 @@ const OrderHistory = props => {
 
   return (
     <View>
-      <Text style={styles.text}>Order history</Text>
+      <View style={styles.title}>
+        <Text style={[styles.text, styles.titletext]}>Order history</Text>
+      </View>
       {listOrders == [] ? (
         <></>
       ) : (
@@ -60,13 +62,13 @@ const OrderHistory = props => {
           renderItem={({item}) => (
             <View style = {styles.container}>
               <View style = {styles.wrapper}>
-                <Text style={styles.text}>{item.order_id} -- </Text>
-                <Text style={styles.status}>{item.order_status}</Text>
+                <Text style={[styles.text, styles.status]}>Order ID: {item.order_id} | </Text>
+                <Text style={styles.status}>Status: {item.order_status}</Text>
               </View>
 
               {item.order_detail.map(itemChild => (
-                <View style={styles.wrapper} key={itemChild.order_detail_id}>
-                  <Text style={styles.text}>{itemChild.product_name} -- </Text>
+                <View style={[styles.wrapper, styles.child]} key={itemChild.order_detail_id}>
+                  <Text style={styles.text}>- {itemChild.product_name} -- </Text>
                   <Text style={styles.text}>{itemChild.product_color}</Text>
                 </View>
               ))}
@@ -88,14 +90,29 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     flexDirection: 'row',
+    paddingLeft: 8,
+    paddingTop: 8
   },
   text: {
     color: 'black',
-    fontSize: 15,
+    fontSize: 14,
     //lineHeight: 10,
   },
   status: {
     fontStyle: 'italic',
     fontWeight: 'bold',
   },
+  title: {
+    alignItems: "center"
+  },
+  titletext: {
+    fontWeight: 'bold',
+    fontSize: 22
+  },
+  id: {
+    fontWeight: 'bold',
+  },
+  child: {
+    paddingLeft: 26
+  }
 });
