@@ -136,7 +136,9 @@ const Carts = ({isLoggedIn, qtyCart, setQtyCart, cart, setCart}) => {
     <View>
       {!isLoggedIn &&
         <View style={styles.buttonContainer}>
-          <Text style={[styles.text, styles.alert]}>You need login to view your card</Text>
+          <View style={styles.viewNote}>
+            <Text style={[styles.text, styles.note]}>You need login to view your cart</Text>
+          </View>
           <Button
             title="Click here to Login"
             color="#fb70ff"
@@ -160,10 +162,11 @@ const Carts = ({isLoggedIn, qtyCart, setQtyCart, cart, setCart}) => {
             }
             keyExtractor={item => `${item.product_id} and ${item.product_detail_id}`}
           />
-          <View style={styles.bottom}>
-            <Text style={styles.text}>Total: {getTotalPrice()}$</Text>
-            <Button title="Checkout" color="#f48cff" onPress={checkOut}/>
+          <View style={styles.viewTotalPrice}>
+            <Text style={[styles.text, styles.totalPrice]}>Total: </Text>
+            <Text style={styles.getPrice}> {getTotalPrice()}$</Text>
           </View>
+          <Button title="Checkout" color="#f48cff" onPress={checkOut}/>
         </View>
       }
     </View>
@@ -175,5 +178,27 @@ export default Carts
 const styles = StyleSheet.create({
   text: {
     color: 'black',
+  },
+  note: {
+    fontWeight: 'bold',
+  },
+  viewNote: {
+    alignItems: 'center',
+    padding: 8,
+  },
+  wrap: {
+    paddingRight: 4,
+    paddingLeft: 4,
+  },
+  viewTotalPrice: {
+    padding: 4,
+    flexDirection: "row",
+  },
+  totalPrice: {
+    fontWeight: 'bold',
+  },
+  getPrice: {
+    color: 'red',
+    fontWeight: 'bold',
   },
 })

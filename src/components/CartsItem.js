@@ -18,8 +18,8 @@ const CartsItem = (props) => {
         
         <View style={styles.row}>
           <View style={styles.rowLeft}>
-            <Text style={[styles.text, styles.price]}>{props.item.product_price}$</Text>
-            <Text style={[styles.text, styles.discounted]}>{props.item.product_price_discounted}$</Text>
+            <Text style={[styles.text, styles.price]}>{props.item.product_price}$ </Text>
+            <Text style={[styles.text, styles.discounted]}> {props.item.product_price_discounted}$</Text>
           </View>
           <View style={styles.rowRight}>
             <Text style={[styles.text, styles.type]}>{props.item.product_color}</Text>
@@ -86,5 +86,15 @@ const styles = StyleSheet.create({
     
   },
   qty: {
+  },
+  price: {
+    fontStyle: "italic",
+    color: "gray",
+    textDecorationLine: 'line-through',
+  },
+  discounted: {
+    color: 'red',
+    fontWeight: 'bold',
+    fontStyle: "italic",
   }
 })
