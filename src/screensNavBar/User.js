@@ -4,11 +4,11 @@ import React from 'react';
 import LoginSignup from '../components/LoginSignup';
 import UserProfile from '../components/UserProfile';
 
-const User = ({isLoggedIn, setIsLoggedIn}) => {  
+const User = ({isLoggedIn, setIsLoggedIn, setToken}) => {  
   return (
     <View style={styles.container}>
-      {!isLoggedIn && <LoginSignup setIsLoggedIn={setIsLoggedIn} />}
-      {isLoggedIn && <UserProfile setIsLoggedIn={setIsLoggedIn} />}
+      {!isLoggedIn && <LoginSignup setIsLoggedIn={setIsLoggedIn} setToken={setToken} />}
+      {isLoggedIn && <UserProfile setIsLoggedIn={setIsLoggedIn} setToken={setToken} />}
     </View>
   );
 };

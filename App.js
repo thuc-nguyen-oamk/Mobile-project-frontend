@@ -32,6 +32,7 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [qtyCart, setQtyCart] = useState(0)
   const [cart, setCart] = useState([])
+  const [token, setToken] = useState("")
 
   useEffect(() => {
     function fetchOne(x) {
@@ -46,11 +47,16 @@ export default function App() {
 
     const readStorage = async () => {
       try {
-        const token = await AsyncStorage.getItem('token')
+        let _token = await AsyncStorage.getItem('token')
         const qtyCartString = await AsyncStorage.getItem('qtyCart')
         const cartString = await AsyncStorage.getItem('cart')
         
-        if (token) { setIsLoggedIn(true)}
+        if (_token) { 
+          setIsLoggedIn(true)
+          // TODO:
+          _token = _token.replace(/"/g, '');
+          setToken(_token)
+        }
         if (qtyCartString) {
           const _qtyCart = parseInt(qtyCartString)
           setQtyCart(_qtyCart)
@@ -78,6 +84,7 @@ export default function App() {
             isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}
             qtyCart={qtyCart} setQtyCart={setQtyCart}
             cart={cart} setCart={setCart}
+            token={token} setToken={setToken}
           />}
         </Stack.Screen>
 
@@ -98,7 +105,7 @@ export default function App() {
 }
 
 const Tab = createBottomTabNavigator()
-function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, setCart}) {
+function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, setCart, token, setToken}) {
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -140,10 +147,11 @@ function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, 
           {...props} isLoggedIn={isLoggedIn}
           qtyCart={qtyCart} setQtyCart={setQtyCart}
           cart={cart} setCart={setCart}
+          token={token}
         />}
       </Tab.Screen>
       <Tab.Screen name='User'>
-        {(props) => <User {...props} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
+        {(props) => <User {...props} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setToken={setToken} />}
       </Tab.Screen>
       <Tab.Screen name='Chat' component={Chat}/>
     </Tab.Navigator>

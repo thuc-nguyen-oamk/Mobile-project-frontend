@@ -7,23 +7,23 @@ import { useNavigation } from '@react-navigation/native';
 import jwt_decode from "jwt-decode";
 import axios from 'react-native-axios';
 
-const Carts = ({isLoggedIn, qtyCart, setQtyCart, cart, setCart}) => {
+const Carts = ({isLoggedIn, qtyCart, setQtyCart, cart, setCart, token}) => {
   const navigation = useNavigation()
-  const [token, setToken] = useState("")
+  // const [token, setToken] = useState("")
   
-  const path = ""
-  useEffect(() => {
-    const readStorage = async () => {
-      try {
-        const _token = await AsyncStorage.getItem('token')
-        setToken(_token)
-      } catch (e) {
-        console.error(e)
-      }
-    }
-    readStorage()
-  }, [path])
-  
+  // const path = ""
+  // useEffect(() => {
+  //   const readStorage = async () => {
+  //     try {
+  //       const _token = await AsyncStorage.getItem('token')
+  //       console.log(_token)
+  //       setToken(_token)
+  //     } catch (e) {
+  //       console.error(e)
+  //     }
+  //   }
+  //   readStorage()
+  // }, [path])
 
   const deleteItem = async (id, detail_id) => {
     try {
@@ -92,6 +92,7 @@ const Carts = ({isLoggedIn, qtyCart, setQtyCart, cart, setCart}) => {
     })
 
     let decode = jwt_decode(token)
+    console.log(token)
 
     let order = {
       customer_id: decode.customer_id,
