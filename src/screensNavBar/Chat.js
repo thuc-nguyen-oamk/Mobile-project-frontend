@@ -1,98 +1,96 @@
 import jwt_decode from 'jwt-decode';
-import React, {useEffect, useState,useRef} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {FlatList, StyleSheet, Text, TextInput, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import io from 'socket.io-client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useIsFocused} from '@react-navigation/native';
 
-export default function Chat({navigation}) {
+export default function Chat({navigation, setNewMessageBadge}) {
   const [messageText, setMessageText] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [customerId, setCustomerId] = useState('');
   const [adminId, setAdminId] = useState('7252643');
+  // const [isFocused, setIsFocused] = useState(false);
+  const isFocused = useIsFocused();
+  console.log('isFocused:', isFocused);
 
   const flatListRef = useRef(null);
-  
+
   console.log('Chat comp is rendered');
-  console.log('messageList:', messageList);
-  console.log('messageList:', messageList);
-  console.log('customerId:', customerId);
-  console.log('adminId:', adminId);
 
   useEffect(() => {
-    console.log('Chat comp useEffect');
-    //get from storage
-    const token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NzUsImN1c3RvbWVyX2VtYWlsIjoiZGFuaWxhQGdtYWlsLmNvbSIsImN1c3RvbWVyX25hbWUiOiJEYW5pbGEiLCJjdXN0b21lcl9hZGRyZXNzIjoiVXVzaWthdHUgMTIzLCBPdWx1LCBGaW5sYW5kIiwiY3VzdG9tZXJfcGhvbmUiOiIxMjM0NTY3ODkiLCJpYXQiOjE2NDk1ODU1MjF9.W5M7EeXbJx_JGGe9JAbxVFOlrptncDXE1tyYh6fWdj8';
-    const customer = jwt_decode(token);
-    if (!customer || !customer.customer_id) {
-      alert('Please login first.');
-      // navigation.navigate('User');
-      return;
-    }
-    setCustomerId(customer.customer_id);
-    // apis then set adin id
-
-    global.socket = io('https://api.uniproject.xyz/', {
-      path: '/eshopmb/socket.io/',
-    });
-
-    global.socket.on('connect', () => {
-      global.socket.emit('customer join', {token});
-    });
-
-    global.socket.on('force disconnect', data => {
+    global.socket.on('chat: force disconnect', data => {
       alert(data.msg);
     });
 
-    global.socket.on('join', data => {
+    global.socket.on('chat: join', data => {
       setMessageList(data.messageList);
     });
 
-    global.socket.on('message', newMessage => {
-      console.log('newMessage:', newMessage);
-      console.log("socket.on('message:", 'event happened');
-      console.log('messageList:', messageList);
+    global.socket.on('chat: message', newMessage => {
+      // console.log('newMessage:', newMessage);
+      // console.log("socket.on('message:", 'event happened');
+      // console.log('messageList:', messageList);
       setMessageList(prevState => [...prevState, newMessage]);
     });
   }, []);
 
-  // useEffect(() => {
-  //   async function fetchCustomerList() {
-  //     let token = await AsyncStorage.getItem('token');
-  //     token = token.replace(/"/g, '');
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // setIsFocused(true);
+      setNewMessageBadge(null);
 
-  //     await apis.GetCustomerList(token).then(response => {
-  //       setCustomerList(response);
-  //       console.log(response);
-  //     });
-  //   }
+      AsyncStorage.getItem('token', (err, result) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
 
-  //   fetchCustomerList();
-  // }, []);
+        if (!result) {
+          alert('Please login first.');
+          navigation.navigate('User');
+          return;
+        }
+
+        const token = result.replace(/"/g, '');
+        const customer = jwt_decode(token);
+
+        if (!customer || !customer.customer_id) {
+          alert('Please login first.');
+          navigation.navigate('User');
+          return;
+        }
+
+        setCustomerId(customer.customer_id);
+        console.log('token:', token);
+
+        global.socket.emit('chat: customer join', {token});
+      });
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   function sendMessage() {
     console.log('sendMessage:', 'event happened');
-    global.socket.emit('message', {
+
+    global.socket.emit('chat: message', {
       message_text: messageText,
       sender_id: customerId,
       receiver_id: adminId,
       room: customerId,
     });
-    // setMessageList([
-    //   ...messageList,
-    //   {
-    //     sender_id: customerId,
-    //     receiver_id: adminId,
-    //     message_text: messageText,
-    //   },
-    // ]);
+
     setMessageText('');
   }
 
   const MessageItem = ({item}) => {
     return (
       <View>
-        <Text style={styles.incomingName}>{item.sender_id == customerId ? "" : "Shop owner"}</Text>
+        <Text style={styles.incomingName}>
+          {item.sender_id == customerId ? '' : 'Shop owner'}
+        </Text>
         <Text
           style={
             item.sender_id == customerId
@@ -112,8 +110,8 @@ export default function Chat({navigation}) {
           <Text style={styles.title}>Contact Store</Text>
         </View>
         <FlatList
-        ref={flatListRef}
-        onContentSizeChange={() => flatListRef.current.scrollToEnd()}
+          ref={flatListRef}
+          onContentSizeChange={() => flatListRef.current.scrollToEnd()}
           data={messageList}
           keyExtractor={(item, index) => index.toString()}
           renderItem={MessageItem}
@@ -175,7 +173,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
   },
-  incomingName:{
+  incomingName: {
     marginLeft: 15,
     fontSize: 10,
     color: '#ccc',
@@ -198,5 +196,4 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 10,
   },
-  
 });
