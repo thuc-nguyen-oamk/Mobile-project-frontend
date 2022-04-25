@@ -38,6 +38,8 @@ const UserProfile = (props) => {
     };
     removeToken();
     props.setIsLoggedIn(false);
+    // TODO and more of App (carts): 
+    props.setToken("");
   }
   return (
     <View style={styles.container}>
