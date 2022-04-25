@@ -7,7 +7,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from "./src/screensNavBar/Home";
 import Categories from "./src/screensNavBar/Categories";
-import Notifications from "./src/screensNavBar/Notifications";
+// import Notifications from "./src/screensNavBar/Notifications";
 import Carts from "./src/screensNavBar/Carts";
 import User from "./src/screensNavBar/User";
 
@@ -111,8 +111,8 @@ function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, 
             iconName = focused ? 'home': 'home-outline'
           } else if (route.name === 'Category') {
             iconName = focused ? 'list': 'list-outline'
-          } else if (route.name === 'Notification') {
-            iconName = focused ? 'notifications': 'notifications-outline'
+          // } else if (route.name === 'Notification') {
+          //   iconName = focused ? 'notifications': 'notifications-outline'
           } else if (route.name === 'Cart') {
             iconName = focused ? 'cart': 'cart-outline'
           } else if (route.name === 'User') {
@@ -132,9 +132,9 @@ function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, 
         {(props) => <Home {...props} products={products} />}
       </Tab.Screen>
       <Tab.Screen name='Category' component={Categories}/>
-      <Tab.Screen name='Notification' component={Notifications}
+      {/* <Tab.Screen name='Notification' component={Notifications}
         options={{ tabBarBadge: 0 }}
-      />
+      /> */}
       <Tab.Screen name='Cart' options={{ tabBarBadge: qtyCart }}>
         {(props) => <Carts
           {...props} isLoggedIn={isLoggedIn}
