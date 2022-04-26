@@ -2,7 +2,6 @@ import jwt_decode from 'jwt-decode';
 import React, {useEffect, useState, useRef} from 'react';
 import {FlatList, StyleSheet, Text, TextInput, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import io from 'socket.io-client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native';
 
@@ -10,8 +9,7 @@ export default function Chat({navigation, setNewMessageBadge}) {
   const [messageText, setMessageText] = useState('');
   const [messageList, setMessageList] = useState([]);
   const [customerId, setCustomerId] = useState('');
-  const [adminId, setAdminId] = useState('7252643');
-  const isFocused = useIsFocused();
+  const [adminId, setAdminId] = useState('');
 
   const flatListRef = useRef(null);
 
@@ -31,7 +29,7 @@ export default function Chat({navigation, setNewMessageBadge}) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      // setIsFocused(true);
+      // Clear the new message badge when the chat screen is focused
       setNewMessageBadge(null);
 
       AsyncStorage.getItem('token', (err, result) => {
@@ -40,15 +38,18 @@ export default function Chat({navigation, setNewMessageBadge}) {
           return;
         }
 
+        // Token not found in AsyncStorage
         if (!result) {
           alert('Please login first.');
           navigation.navigate('User');
           return;
         }
 
+        // Forgot to call JSON.parse on AsyncStorage.getItem may lead to redundant double quotes
         const token = result.replace(/"/g, '');
         const customer = jwt_decode(token);
 
+        // The token is in invalid format or it does not contain customer_id
         if (!customer || !customer.customer_id) {
           alert('Please login first.');
           navigation.navigate('User');
@@ -57,6 +58,7 @@ export default function Chat({navigation, setNewMessageBadge}) {
 
         setCustomerId(customer.customer_id);
 
+        // Emit a join event to the server
         global.socket.emit('chat: customer join', {token});
       });
     });
@@ -72,6 +74,7 @@ export default function Chat({navigation, setNewMessageBadge}) {
       room: customerId,
     });
 
+    // Clear the TextInput after sending the message
     setMessageText('');
   }
 
