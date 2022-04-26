@@ -22,17 +22,18 @@ const LoginSignup = (props) => {
       .then(res => {
         const storeToken = async () => {
           try {
-            let token = res.data.token
-            token = token.replace(/"/g, '');
-            await AsyncStorage.setItem('token', token)
-            axios.defaults.headers['Authorization'] = `Bearer ${token}`
+            let _token = res.data.token
+            _token = _token.replace(/"/g, '');
+            await AsyncStorage.setItem('token', _token)
+            axios.defaults.headers['Authorization'] = `Bearer ${_token}`
             alert("Login success")
-            props.setIsLoggedIn(true)
+            props.setToken(_token)
           } catch (e) {
             console.error(e)
           }
         };
         storeToken()
+        props.setIsLoggedIn(true)
       })
       .catch(err => alert("Wrong email or password"))
   };

@@ -108,13 +108,13 @@ const Product = (props) => {
             data={productTypes}
             numColumns={5}
             renderItem={({ item }) =>
-              <TouchableOpacity activeOpacity={0.5}
-                onPress={() => onPressTypeColor(item)}
-              >
-                <View style={styles.wrap}>
-                  <Text style={[styles.text, styles.type]}>{item.product_color}</Text>
-                </View>
-              </TouchableOpacity>
+              <View style={styles.wrap}>
+                <TouchableOpacity activeOpacity={0.5} style={styles.btn}
+                  onPress={() => onPressTypeColor(item)}
+                >
+                    <Text style={[styles.textwhite, styles.type]}>{item.product_color}</Text>
+                </TouchableOpacity>
+              </View>
             }
             keyExtractor={item => item}
           />  
@@ -190,5 +190,17 @@ const styles = StyleSheet.create({
   },
   stock: {
     paddingTop: 8
+  },
+  btn: {
+    backgroundColor: "#64a6e8",
+    borderRadius: 12,
+  },
+  textwhite: {
+    color: "white",
+  },
+  type: {
+    padding: 4,
+    fontWeight: "500",
+    fontSize: 14
   }
 })

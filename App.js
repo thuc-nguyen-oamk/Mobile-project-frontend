@@ -7,14 +7,16 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from "./src/screensNavBar/Home";
 import Categories from "./src/screensNavBar/Categories";
-import Notifications from "./src/screensNavBar/Notifications";
+// import Notifications from "./src/screensNavBar/Notifications";
 import Carts from "./src/screensNavBar/Carts";
 import User from "./src/screensNavBar/User";
 
 import Category from "./src/screens/Category";
 import Product from './src/screens/Product';
 import SignUp from './src/screens/SignUp';
+import EditProfile from './src/screens/EditProfile';
 import Chat from "./src/screensNavBar/Chat";
+import OrderHistory from './src/screens/OrderHistory';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'react-native-axios';
@@ -35,6 +37,7 @@ export default function App() {
   const [qtyCart, setQtyCart] = useState(0)
   const [cart, setCart] = useState([])
   const [newMessageBadge, setNewMessageBadge] = useState(null)
+  const [token, setToken] = useState("")
 
   useEffect(() => {
     function fetchOne(x) {
@@ -49,11 +52,16 @@ export default function App() {
 
     const readStorage = async () => {
       try {
-        const token = await AsyncStorage.getItem('token')
+        let _token = await AsyncStorage.getItem('token')
         const qtyCartString = await AsyncStorage.getItem('qtyCart')
         const cartString = await AsyncStorage.getItem('cart')
         
-        if (token) { setIsLoggedIn(true)}
+        if (_token) { 
+          setIsLoggedIn(true)
+          // TODO:
+          _token = _token.replace(/"/g, '');
+          setToken(_token)
+        }
         if (qtyCartString) {
           const _qtyCart = parseInt(qtyCartString)
           setQtyCart(_qtyCart)
@@ -104,6 +112,7 @@ export default function App() {
             qtyCart={qtyCart} setQtyCart={setQtyCart}
             cart={cart} setCart={setCart}
             newMessageBadge={newMessageBadge} setNewMessageBadge={setNewMessageBadge}
+            token={token} setToken={setToken}
           />}
         </Stack.Screen>
 
@@ -116,14 +125,15 @@ export default function App() {
           }
         </Stack.Screen>
         <Stack.Screen name="SignUp" component={SignUp} />
-      
+        <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen name="OrderHistory" component={OrderHistory} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 const Tab = createBottomTabNavigator()
-function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, setCart, newMessageBadge, setNewMessageBadge}) {
+function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, setCart, token, setToken, newMessageBadge, setNewMessageBadge}) {
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -136,8 +146,8 @@ function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, 
             iconName = focused ? 'home': 'home-outline'
           } else if (route.name === 'Category') {
             iconName = focused ? 'list': 'list-outline'
-          } else if (route.name === 'Notification') {
-            iconName = focused ? 'notifications': 'notifications-outline'
+          // } else if (route.name === 'Notification') {
+          //   iconName = focused ? 'notifications': 'notifications-outline'
           } else if (route.name === 'Cart') {
             iconName = focused ? 'cart': 'cart-outline'
           } else if (route.name === 'User') {
@@ -157,18 +167,19 @@ function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, 
         {(props) => <Home {...props} products={products} />}
       </Tab.Screen>
       <Tab.Screen name='Category' component={Categories}/>
-      <Tab.Screen name='Notification' component={Notifications}
+      {/* <Tab.Screen name='Notification' component={Notifications}
         options={{ tabBarBadge: 0 }}
-      />
+      /> */}
       <Tab.Screen name='Cart' options={{ tabBarBadge: qtyCart }}>
         {(props) => <Carts
           {...props} isLoggedIn={isLoggedIn}
           qtyCart={qtyCart} setQtyCart={setQtyCart}
           cart={cart} setCart={setCart}
+          token={token}
         />}
       </Tab.Screen>
       <Tab.Screen name='User'>
-        {(props) => <User {...props} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
+        {(props) => <User {...props} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setToken={setToken} />}
       </Tab.Screen>
       <Tab.Screen name='Chat' options={{ tabBarBadge: newMessageBadge }}>
         {(props) => <Chat {...props} setNewMessageBadge={setNewMessageBadge}/>}
