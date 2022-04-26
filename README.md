@@ -1,18 +1,19 @@
-# The purpose of this project was to create a e-commerce mobile application (for SME shop / store)
+# DESCRIPTION:
+  - The purpose of this project was to create a e-commerce mobile application (for SME shop / store)
   - The application has two main user types: customers and admin
 
-# Application architecture:
+# APPLICATION ARCHITECTURE:
   ## backend:
     - Framework: nodeJS, expressJS
     - Port view: 3000
   ## frontend:
     - Framework: React Native
-    ### Customer App:
+  ### Customer App:
     - Some versions:
       - "node": "16.13.2",
       - "react": "17.0.2",
       - "react-native": "0.67.2"
-    ### Admin App:
+  ### Admin App:
     - Some versions:
       - "node": "16.13.2",
       - "react": "17.0.2",
@@ -30,14 +31,14 @@
   ## UX, UI:
     - figma
 
-# More information:
+# MORE INFORMATION:
   - Business document
   - Jira with scrum and product requirement
   - 365 drive:
     - daily meeting document
     - testing document
 
-# Delpoy code:
+# DELPOY CODE:
   ## backend: run
     - npm install
     - node ./index.js
