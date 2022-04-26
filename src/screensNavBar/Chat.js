@@ -11,13 +11,9 @@ export default function Chat({navigation, setNewMessageBadge}) {
   const [messageList, setMessageList] = useState([]);
   const [customerId, setCustomerId] = useState('');
   const [adminId, setAdminId] = useState('7252643');
-  // const [isFocused, setIsFocused] = useState(false);
   const isFocused = useIsFocused();
-  console.log('isFocused:', isFocused);
 
   const flatListRef = useRef(null);
-
-  console.log('Chat comp is rendered');
 
   useEffect(() => {
     global.socket.on('chat: force disconnect', data => {
@@ -29,9 +25,6 @@ export default function Chat({navigation, setNewMessageBadge}) {
     });
 
     global.socket.on('chat: message', newMessage => {
-      // console.log('newMessage:', newMessage);
-      // console.log("socket.on('message:", 'event happened');
-      // console.log('messageList:', messageList);
       setMessageList(prevState => [...prevState, newMessage]);
     });
   }, []);
@@ -63,7 +56,6 @@ export default function Chat({navigation, setNewMessageBadge}) {
         }
 
         setCustomerId(customer.customer_id);
-        console.log('token:', token);
 
         global.socket.emit('chat: customer join', {token});
       });
@@ -73,8 +65,6 @@ export default function Chat({navigation, setNewMessageBadge}) {
   }, [navigation]);
 
   function sendMessage() {
-    console.log('sendMessage:', 'event happened');
-
     global.socket.emit('chat: message', {
       message_text: messageText,
       sender_id: customerId,

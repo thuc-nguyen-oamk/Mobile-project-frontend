@@ -71,7 +71,6 @@ export default function App() {
 
   useEffect(() => {
     // connect to the socketio server
-    console.log("connect to the socketio server")
     global.socket = io(API_ADDRESS, {path: SOCKETIO_PATH});
 
     AsyncStorage.getItem('token', (err, result) => {
@@ -88,7 +87,6 @@ export default function App() {
     })
 
     global.socket.on('chat: message', newMessage =>{
-      console.log("newMessage", newMessage)
       setNewMessageBadge("!")
     })
   }, [])
