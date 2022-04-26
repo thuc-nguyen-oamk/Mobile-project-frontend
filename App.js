@@ -22,6 +22,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'react-native-axios';
 import { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import io from 'socket.io-client';
+
+const API_ADDRESS = "https://api.uniproject.xyz/"
+const SOCKETIO_PATH = "/eshopmb/socket.io/"
 
 const Stack = createNativeStackNavigator()
 export default function App() {
@@ -32,6 +36,7 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [qtyCart, setQtyCart] = useState(0)
   const [cart, setCart] = useState([])
+  const [newMessageBadge, setNewMessageBadge] = useState(null)
   const [token, setToken] = useState("")
 
   useEffect(() => {
@@ -71,6 +76,28 @@ export default function App() {
     };
     readStorage();
   }, [path]) 
+
+  useEffect(() => {
+    // connect to the socketio server
+    global.socket = io(API_ADDRESS, {path: SOCKETIO_PATH});
+
+    AsyncStorage.getItem('token', (err, result) => {
+      if (err) {
+        cosole.error(err)
+        return
+      }
+      if (result) {
+        const token = result.replace(/"/g, '');
+        global.socket.on('connect', () => {
+          global.socket.emit('chat: customer join', {token});
+        })
+      }
+    })
+
+    global.socket.on('chat: message', newMessage =>{
+      setNewMessageBadge("!")
+    })
+  }, [])
   
   return (
     <NavigationContainer style={styles.container}>
@@ -84,6 +111,7 @@ export default function App() {
             isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}
             qtyCart={qtyCart} setQtyCart={setQtyCart}
             cart={cart} setCart={setCart}
+            newMessageBadge={newMessageBadge} setNewMessageBadge={setNewMessageBadge}
             token={token} setToken={setToken}
           />}
         </Stack.Screen>
@@ -105,7 +133,7 @@ export default function App() {
 }
 
 const Tab = createBottomTabNavigator()
-function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, setCart, token, setToken}) {
+function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, setCart, token, setToken, newMessageBadge, setNewMessageBadge}) {
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -153,7 +181,9 @@ function TabMe({products, isLoggedIn, setIsLoggedIn, qtyCart, setQtyCart, cart, 
       <Tab.Screen name='User'>
         {(props) => <User {...props} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setToken={setToken} />}
       </Tab.Screen>
-      <Tab.Screen name='Chat' component={Chat}/>
+      <Tab.Screen name='Chat' options={{ tabBarBadge: newMessageBadge }}>
+        {(props) => <Chat {...props} setNewMessageBadge={setNewMessageBadge}/>}
+      </Tab.Screen>
     </Tab.Navigator>
   )
 };
